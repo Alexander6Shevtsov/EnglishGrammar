@@ -1,22 +1,8 @@
 import UIKit
 
-private struct GrammarComparisonEntry {
-    let title: String
-    let subtitle: String
-    let formulaPreview: String
-    let lessonID: String
-    let accentColor: UIColor
-    let rules: [GrammarReferenceRule]
-}
-
 @MainActor
-final class GrammarComparisonsViewController: UIViewController {
-    var onLessonSelected: ((GrammarLesson) -> Void)?
-
-    private let lessons: [GrammarLesson]
-    private let scrollView = ReferenceScrollingScrollView()
-    private let contentStack = UIStackView.vertical(spacing: 16)
-    private let entries: [GrammarComparisonEntry] = [
+final class GrammarComparisonsViewController: GrammarReferenceOverviewViewController {
+    private static let entries: [GrammarReferenceEntry] = [
         .init(
             title: "Comparative",
             subtitle: "Сравнительная степень: выше, быстрее, интереснее",
@@ -216,108 +202,16 @@ final class GrammarComparisonsViewController: UIViewController {
     ]
 
     init(lessons: [GrammarLesson]) {
-        self.lessons = lessons
-        super.init(nibName: nil, bundle: nil)
+        super.init(
+            title: "Все степени сравнения",
+            heading: "Степени сравнения",
+            explanation: "Как сравнить два предмета, выделить одного из группы и показать равенство. Нажмите на карточку, чтобы открыть формулы, правила и примеры.",
+            entries: Self.entries,
+            lessons: lessons
+        )
     }
 
     required init?(coder: NSCoder) {
         return nil
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        title = "Все степени сравнения"
-        view.backgroundColor = GrammarPalette.background
-        configureLayout()
-    }
-
-    private func configureLayout() {
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.alwaysBounceVertical = true
-        contentStack.translatesAutoresizingMaskIntoConstraints = false
-        contentStack.isLayoutMarginsRelativeArrangement = true
-        contentStack.layoutMargins = UIEdgeInsets(top: 20, left: 20, bottom: 36, right: 20)
-        view.addSubview(scrollView)
-        scrollView.addSubview(contentStack)
-
-        NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            contentStack.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
-            contentStack.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
-            contentStack.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
-            contentStack.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
-            contentStack.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor)
-        ])
-
-        let headingLabel = UILabel.grammarLabel(size: 27, weight: .bold)
-        headingLabel.text = "Степени сравнения"
-        contentStack.addArrangedSubview(headingLabel)
-
-        let explanationLabel = UILabel.grammarLabel(size: 15, color: GrammarPalette.textSecondary)
-        explanationLabel.text = "Как сравнить два предмета, выделить одного из группы и показать равенство. Нажмите на карточку, чтобы открыть формулы, правила и примеры."
-        contentStack.addArrangedSubview(explanationLabel)
-
-        for (position, entry) in entries.enumerated() {
-            contentStack.addArrangedSubview(makeComparisonCard(entry: entry, position: position))
-        }
-    }
-
-    private func makeComparisonCard(entry: GrammarComparisonEntry, position: Int) -> UIControl {
-        let cardView = UIControl()
-        cardView.tag = position
-        cardView.backgroundColor = GrammarPalette.surface
-        cardView.layer.cornerRadius = 18
-        cardView.layer.borderWidth = 1
-        cardView.layer.borderColor = entry.accentColor.withAlphaComponent(0.45).cgColor
-        cardView.addTarget(self, action: #selector(openComparison(_:)), for: .touchUpInside)
-
-        let cardStack = UIStackView.vertical(spacing: 10)
-        cardStack.isUserInteractionEnabled = false
-        cardStack.translatesAutoresizingMaskIntoConstraints = false
-        cardView.addSubview(cardStack)
-
-        let titleLabel = UILabel.grammarLabel(size: 19, weight: .bold, color: entry.accentColor)
-        titleLabel.text = entry.title
-        cardStack.addArrangedSubview(titleLabel)
-
-        let subtitleLabel = UILabel.grammarLabel(size: 14, color: GrammarPalette.textSecondary)
-        subtitleLabel.text = entry.subtitle
-        cardStack.addArrangedSubview(subtitleLabel)
-
-        let formulaLabel = UILabel.grammarLabel(size: 15)
-        formulaLabel.text = entry.formulaPreview
-        cardStack.addArrangedSubview(formulaLabel)
-
-        NSLayoutConstraint.activate([
-            cardStack.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 18),
-            cardStack.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 16),
-            cardStack.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -16),
-            cardStack.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -18)
-        ])
-
-        cardView.isAccessibilityElement = true
-        cardView.accessibilityTraits = .button
-        cardView.accessibilityLabel = "\(entry.title). \(entry.subtitle). \(entry.formulaPreview)"
-        cardView.accessibilityHint = "Открыть схему, объяснение и примеры"
-        return cardView
-    }
-
-    @objc private func openComparison(_ sender: UIControl) {
-        guard entries.indices.contains(sender.tag) else { return }
-        let entry = entries[sender.tag]
-        let lesson = lessons.first(where: { $0.id == entry.lessonID })
-        let detailController = GrammarReferenceDetailViewController(
-            title: entry.title,
-            accentColor: entry.accentColor,
-            rules: entry.rules,
-            lesson: lesson
-        )
-        detailController.onLessonSelected = { [weak self] selectedLesson in
-            self?.onLessonSelected?(selectedLesson)
-        }
-        navigationController?.pushViewController(detailController, animated: true)
     }
 }

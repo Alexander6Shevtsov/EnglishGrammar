@@ -4,6 +4,36 @@
  classes = {};
  objectVersion = 56;
  objects = {
+	5782FE3C1E184F5D9066CE3D = {
+		isa = PBXFileReference;
+		path = GrammarTensesMatrixViewController.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	4F01D49358904F928F44161B = {
+		isa = PBXBuildFile;
+		fileRef = 5782FE3C1E184F5D9066CE3D;
+	};
+	5BA69551EA17412CA931EA16 = {
+		isa = PBXFileReference;
+		path = GrammarConditionalsViewController.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	6DD6275451804D4AAB95104E = {
+		isa = PBXBuildFile;
+		fileRef = 5BA69551EA17412CA931EA16;
+	};
+	B9DAEF57DBD3469E8ED9542C = {
+		isa = PBXFileReference;
+		path = GrammarReferenceOverviewViewController.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	56021B51968441188BCE6996 = {
+		isa = PBXBuildFile;
+		fileRef = B9DAEF57DBD3469E8ED9542C;
+	};
 	B87EB16A53484FC68219D583 = {
 		isa = PBXFileReference;
 		path = GrammarComparisonsViewController.swift;
@@ -324,6 +354,9 @@
 		isa = PBXGroup;
 		children = (
 	7BC922EE5E5ECEE5A377F24E,
+	5782FE3C1E184F5D9066CE3D,
+	5BA69551EA17412CA931EA16,
+	B9DAEF57DBD3469E8ED9542C,
 	B87EB16A53484FC68219D583,
 	1B4A1D719E4042AD9A8AD9D8,
 );
@@ -450,6 +483,9 @@
 	949DD51CA486A36E036E670A,
 	CEB6038FC9F2379F48DE81C9,
 	7DAE6AD785DE32B9D2E20757,
+	4F01D49358904F928F44161B,
+	6DD6275451804D4AAB95104E,
+	56021B51968441188BCE6996,
 	8D98FFF2CFC141B495E823E3,
 	62381FEF69CA4A47AE899215,
 );
