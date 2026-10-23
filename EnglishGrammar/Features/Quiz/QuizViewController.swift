@@ -71,7 +71,12 @@ final class QuizViewController: UIViewController {
             button.titleLabel?.font = .systemFont(ofSize: 17, weight: .medium)
             button.titleLabel?.numberOfLines = 0
             button.contentHorizontalAlignment = .leading
-            button.contentEdgeInsets = UIEdgeInsets(top: 14, left: 16, bottom: 14, right: 16)
+			button.configuration?.contentInsets = NSDirectionalEdgeInsets(
+				top: 14,
+				leading: 16,
+				bottom: 14,
+				trailing: 16
+			)
             button.backgroundColor = GrammarPalette.surface
             button.tintColor = GrammarPalette.textPrimary
             button.layer.cornerRadius = 14

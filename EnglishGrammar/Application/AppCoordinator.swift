@@ -45,6 +45,7 @@ final class AppCoordinator {
         tabs.tabBar.unselectedItemTintColor = GrammarPalette.textSecondary
         tabs.tabBar.barTintColor = GrammarPalette.background
         tabs.tabBar.backgroundColor = GrammarPalette.surface
+		window.overrideUserInterfaceStyle = .dark
         window.rootViewController = tabs
         window.makeKeyAndVisible()
 
