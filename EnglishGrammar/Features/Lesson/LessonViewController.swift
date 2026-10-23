@@ -13,6 +13,7 @@ final class LessonViewController: UIViewController {
     var onStartQuiz: ((GrammarLesson) -> Void)?
 
     private let lesson: GrammarLesson
+    private let allowsPractice: Bool
     private let scrollView = UIScrollView()
     private let pageStack = UIStackView.vertical(spacing: 18)
     private let tabContentStack = UIStackView.vertical(spacing: 16)
@@ -20,8 +21,9 @@ final class LessonViewController: UIViewController {
     private let footerView = UIView()
     private let practiceButton = UIButton(type: .system)
 
-    init(lesson: GrammarLesson) {
+    init(lesson: GrammarLesson, allowsPractice: Bool = true) {
         self.lesson = lesson
+        self.allowsPractice = allowsPractice
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -112,6 +114,25 @@ final class LessonViewController: UIViewController {
     }
 
     private func configurePracticeButton() {
+        guard allowsPractice else {
+            let lockedLabel = UILabel.grammarLabel(
+                size: 15,
+                weight: .semibold,
+                color: GrammarPalette.textSecondary
+            )
+            lockedLabel.text = "Практика закрыта. Пройдите предыдущий урок на карте."
+            lockedLabel.textAlignment = .center
+            lockedLabel.translatesAutoresizingMaskIntoConstraints = false
+            footerView.addSubview(lockedLabel)
+
+            NSLayoutConstraint.activate([
+                lockedLabel.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 14),
+                lockedLabel.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 20),
+                lockedLabel.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -20),
+                lockedLabel.bottomAnchor.constraint(equalTo: footerView.bottomAnchor, constant: -14)
+            ])
+            return
+        }
         practiceButton.setTitle(
             "Начать практику · \(lesson.questions.count) заданий",
             for: .normal
@@ -297,6 +318,7 @@ final class LessonViewController: UIViewController {
     }
 
     @objc private func startQuiz() {
+        guard allowsPractice else { return }
         onStartQuiz?(lesson)
     }
 }
