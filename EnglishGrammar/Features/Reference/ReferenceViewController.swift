@@ -170,7 +170,9 @@ final class ReferenceViewController: UIViewController {
                 symbolName: definition.symbolName,
                 accentColor: GrammarPalette.accent(for: section.accent),
                 lessons: lessons,
-                isTensesOverview: section.id == "tenses" && definition.lessonIDs.isEmpty
+                overview: definition.lessonIDs.isEmpty
+                    ? ReferenceOverview(rawValue: section.id)
+                    : nil
             )
         }
     }
@@ -246,13 +248,23 @@ final class ReferenceViewController: UIViewController {
     @objc private func openTopic(_ sender: UIControl) {
         guard visibleTopics.indices.contains(sender.tag) else { return }
         let topic = visibleTopics[sender.tag]
-        if topic.isTensesOverview {
+        switch topic.overview {
+        case .tenses:
             let matrixController = GrammarTensesMatrixViewController(lessons: topic.lessons)
             matrixController.onLessonSelected = { [weak self] lesson in
                 self?.onLessonSelected?(lesson)
             }
             navigationController?.pushViewController(matrixController, animated: true)
             return
+        case .conditionals:
+            let conditionalsController = GrammarConditionalsViewController(lessons: topic.lessons)
+            conditionalsController.onLessonSelected = { [weak self] lesson in
+                self?.onLessonSelected?(lesson)
+            }
+            navigationController?.pushViewController(conditionalsController, animated: true)
+            return
+        case nil:
+            break
         }
         let topicController = ReferenceTopicViewController(topic: topic)
         topicController.onLessonSelected = { [weak self] lesson in
@@ -270,13 +282,18 @@ private struct ReferenceTopicDefinition {
     let lessonIDs: [String]
 }
 
+private enum ReferenceOverview: String {
+    case tenses
+    case conditionals
+}
+
 private struct ReferenceTopic {
     let title: String
     let subtitle: String
     let symbolName: String
     let accentColor: UIColor
     let lessons: [GrammarLesson]
-    let isTensesOverview: Bool
+    let overview: ReferenceOverview?
 }
 
 @MainActor
@@ -665,8 +682,16 @@ private final class GrammarTensesMatrixViewController: UIViewController {
         guard entries.indices.contains(sender.tag) else { return }
         let entry = entries[sender.tag]
         let lesson = lessons.first(where: { $0.id == entry.lessonID })
-        let detailController = GrammarTenseDetailViewController(
-            entry: entry,
+        let detailController = GrammarReferenceDetailViewController(
+            title: entry.title,
+            accentColor: entry.group.accentColor,
+            rules: [GrammarReferenceRule(
+                title: nil,
+                formula: entry.formula,
+                explanation: entry.explanation,
+                example: entry.example,
+                translation: entry.translation
+            )],
             lesson: lesson
         )
         detailController.onLessonSelected = { [weak self] selectedLesson in
@@ -676,18 +701,110 @@ private final class GrammarTensesMatrixViewController: UIViewController {
     }
 }
 
+private struct GrammarReferenceRule {
+    let title: String?
+    let formula: String
+    let explanation: String
+    let example: String
+    let translation: String
+}
+
+private struct GrammarConditionalEntry {
+    let title: String
+    let subtitle: String
+    let lessonID: String
+    let accentColor: UIColor
+    let rules: [GrammarReferenceRule]
+}
+
 @MainActor
-private final class GrammarTenseDetailViewController: UIViewController {
+private final class GrammarConditionalsViewController: UIViewController {
     var onLessonSelected: ((GrammarLesson) -> Void)?
 
-    private let entry: GrammarTenseEntry
-    private let lesson: GrammarLesson?
-    private let scrollView = UIScrollView()
-    private let contentStack = UIStackView.vertical(spacing: 20)
+    private static let notation = "V1 — начальная форма глагола. V3 — третья форма глагола (past participle)."
 
-    init(entry: GrammarTenseEntry, lesson: GrammarLesson?) {
-        self.entry = entry
-        self.lesson = lesson
+    private let lessons: [GrammarLesson]
+    private let scrollView = ReferenceScrollingScrollView()
+    private let contentStack = UIStackView.vertical(spacing: 16)
+    private let entries: [GrammarConditionalEntry] = [
+        .init(
+            title: "Zero Conditional",
+            subtitle: "Факты и закономерности",
+            lessonID: "zero",
+            accentColor: GrammarPalette.mint,
+            rules: [.init(
+                title: nil,
+                formula: "If + Present Simple, Present Simple",
+                explanation: "Условие и результат повторяются всегда: это факт, правило или закономерность. В таком значении if можно заменить на when.",
+                example: "If you heat ice, it melts.",
+                translation: "Если нагревать лёд, он тает."
+            )]
+        ),
+        .init(
+            title: "First Conditional",
+            subtitle: "Реальная возможность в будущем",
+            lessonID: "first",
+            accentColor: GrammarPalette.blue,
+            rules: [.init(
+                title: nil,
+                formula: "If + Present Simple, will + V1",
+                explanation: "Реальное условие и возможный результат в будущем. В основной схеме после if используется Present Simple, а will стоит в части результата.",
+                example: "If it rains, I will stay at home.",
+                translation: "Если пойдёт дождь, я останусь дома."
+            )]
+        ),
+        .init(
+            title: "Second Conditional",
+            subtitle: "Воображаемое настоящее или будущее",
+            lessonID: "second",
+            accentColor: GrammarPalette.purple,
+            rules: [.init(
+                title: nil,
+                formula: "If + Past Simple, would + V1",
+                explanation: "Нереальная или маловероятная ситуация в настоящем или будущем. Past Simple здесь обозначает воображаемое условие. С глаголом be используйте were: If I were you…",
+                example: "If I had more money, I would buy a house.",
+                translation: "Если бы у меня было больше денег, я бы купил дом."
+            )]
+        ),
+        .init(
+            title: "Third Conditional",
+            subtitle: "Нереальное условие в прошлом",
+            lessonID: "third",
+            accentColor: GrammarPalette.orange,
+            rules: [.init(
+                title: nil,
+                formula: "If + had + V3, would have + V3",
+                explanation: "Условие и результат относятся к прошлому. Мы представляем, как всё могло бы сложиться иначе, но изменить произошедшее уже нельзя.",
+                example: "If she had left earlier, she would have caught the train.",
+                translation: "Если бы она выехала раньше, она бы успела на поезд."
+            )]
+        ),
+        .init(
+            title: "Mixed Conditional",
+            subtitle: "Условие и результат в разных временах",
+            lessonID: "mixed",
+            accentColor: GrammarPalette.turquoise,
+            rules: [
+                .init(
+                    title: "Прошлое → настоящее",
+                    formula: "If + had + V3, would + V1",
+                    explanation: "Нереальное условие в прошлом влияет на результат в настоящем. Учёба была в прошлом, а профессия относится к сегодняшнему дню.",
+                    example: "If I had studied medicine, I would be a doctor now.",
+                    translation: "Если бы я выучился на врача, я бы сейчас работал врачом."
+                ),
+                .init(
+                    title: "Настоящее → прошлое",
+                    formula: "If + Past Simple, would have + V3",
+                    explanation: "Постоянное свойство или состояние влияет на результат в прошлом. Страх летать существует вообще, а поездка осталась в прошлом.",
+                    example: "If I weren't afraid of flying, I would have gone with you.",
+                    translation: "Если бы я не боялся летать, я бы тогда поехал с вами."
+                )
+            ]
+        )
+    ]
+
+    init(lessons: [GrammarLesson]) {
+        self.lessons = lessons
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -697,7 +814,142 @@ private final class GrammarTenseDetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = entry.title
+        title = "Все условные предложения"
+        view.backgroundColor = GrammarPalette.background
+        configureLayout()
+    }
+
+    private func configureLayout() {
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.alwaysBounceVertical = true
+        contentStack.translatesAutoresizingMaskIntoConstraints = false
+        contentStack.isLayoutMarginsRelativeArrangement = true
+        contentStack.layoutMargins = UIEdgeInsets(top: 20, left: 20, bottom: 36, right: 20)
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentStack)
+
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            contentStack.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            contentStack.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            contentStack.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            contentStack.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            contentStack.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor)
+        ])
+
+        let headingLabel = UILabel.grammarLabel(size: 27, weight: .bold)
+        headingLabel.text = "Условные предложения"
+        contentStack.addArrangedSubview(headingLabel)
+
+        let explanationLabel = UILabel.grammarLabel(size: 15, color: GrammarPalette.textSecondary)
+        explanationLabel.text = "Пять типов: от общих фактов до воображаемых ситуаций. Нажмите на карточку, чтобы открыть схему и примеры."
+        contentStack.addArrangedSubview(explanationLabel)
+
+        let notationLabel = UILabel.grammarLabel(size: 13, color: GrammarPalette.textSecondary)
+        notationLabel.text = Self.notation
+        contentStack.addArrangedSubview(notationLabel)
+
+        for (position, entry) in entries.enumerated() {
+            contentStack.addArrangedSubview(makeConditionalCard(entry: entry, position: position))
+        }
+    }
+
+    private func makeConditionalCard(entry: GrammarConditionalEntry, position: Int) -> UIControl {
+        let cardView = UIControl()
+        cardView.tag = position
+        cardView.backgroundColor = GrammarPalette.surface
+        cardView.layer.cornerRadius = 18
+        cardView.layer.borderWidth = 1
+        cardView.layer.borderColor = entry.accentColor.withAlphaComponent(0.45).cgColor
+        cardView.addTarget(self, action: #selector(openConditional(_:)), for: .touchUpInside)
+
+        let cardStack = UIStackView.vertical(spacing: 10)
+        cardStack.isUserInteractionEnabled = false
+        cardStack.translatesAutoresizingMaskIntoConstraints = false
+        cardView.addSubview(cardStack)
+
+        let titleLabel = UILabel.grammarLabel(size: 19, weight: .bold, color: entry.accentColor)
+        titleLabel.text = entry.title
+        cardStack.addArrangedSubview(titleLabel)
+
+        let subtitleLabel = UILabel.grammarLabel(size: 14, color: GrammarPalette.textSecondary)
+        subtitleLabel.text = entry.subtitle
+        cardStack.addArrangedSubview(subtitleLabel)
+
+        let formulaLabel = UILabel.grammarLabel(size: 15)
+        formulaLabel.text = entry.rules.map(\.formula).joined(separator: "\nили\n")
+        cardStack.addArrangedSubview(formulaLabel)
+
+        NSLayoutConstraint.activate([
+            cardStack.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 18),
+            cardStack.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 16),
+            cardStack.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -16),
+            cardStack.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -18)
+        ])
+
+        cardView.isAccessibilityElement = true
+        cardView.accessibilityTraits = .button
+        let formulas = entry.rules.map(\.formula).joined(separator: ". Или: ")
+        cardView.accessibilityLabel = "\(entry.title). \(entry.subtitle). \(formulas)"
+        cardView.accessibilityHint = "Открыть схему, объяснение и примеры"
+        return cardView
+    }
+
+    @objc private func openConditional(_ sender: UIControl) {
+        guard entries.indices.contains(sender.tag) else { return }
+        let entry = entries[sender.tag]
+        let lesson = lessons.first(where: { $0.id == entry.lessonID })
+        let detailController = GrammarReferenceDetailViewController(
+            title: entry.title,
+            accentColor: entry.accentColor,
+            rules: entry.rules,
+            lesson: lesson,
+            notation: Self.notation
+        )
+        detailController.onLessonSelected = { [weak self] selectedLesson in
+            self?.onLessonSelected?(selectedLesson)
+        }
+        navigationController?.pushViewController(detailController, animated: true)
+    }
+}
+
+@MainActor
+private final class GrammarReferenceDetailViewController: UIViewController {
+    var onLessonSelected: ((GrammarLesson) -> Void)?
+
+    private let heading: String
+    private let accentColor: UIColor
+    private let rules: [GrammarReferenceRule]
+    private let lesson: GrammarLesson?
+    private let notation: String?
+    private let scrollView = UIScrollView()
+    private let contentStack = UIStackView.vertical(spacing: 20)
+
+    init(
+        title: String,
+        accentColor: UIColor,
+        rules: [GrammarReferenceRule],
+        lesson: GrammarLesson?,
+        notation: String? = nil
+    ) {
+        self.heading = title
+        self.accentColor = accentColor
+        self.rules = rules
+        self.lesson = lesson
+        self.notation = notation
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        return nil
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = heading
         view.backgroundColor = GrammarPalette.background
         configureLayout()
     }
@@ -728,22 +980,39 @@ private final class GrammarTenseDetailViewController: UIViewController {
         ])
 
         let titleLabel = UILabel.grammarLabel(size: 28, weight: .bold)
-        titleLabel.text = entry.title
+        titleLabel.text = heading
         contentStack.addArrangedSubview(titleLabel)
 
-        addDetailCard(title: "Формула", body: entry.formula, accentColor: entry.group.accentColor)
-        addDetailCard(title: "Когда используем", body: entry.explanation, accentColor: GrammarPalette.purple)
-        addDetailCard(title: "Пример", body: "\(entry.example)\n\(entry.translation)", accentColor: GrammarPalette.orange)
+        for rule in rules {
+            if let ruleTitle = rule.title {
+                let ruleLabel = UILabel.grammarLabel(size: 21, weight: .bold, color: accentColor)
+                ruleLabel.text = ruleTitle
+                contentStack.addArrangedSubview(ruleLabel)
+            }
+            addDetailCard(title: "Формула", body: rule.formula, accentColor: accentColor)
+            addDetailCard(title: "Когда используем", body: rule.explanation, accentColor: GrammarPalette.purple)
+            addDetailCard(title: "Пример", body: "\(rule.example)\n\(rule.translation)", accentColor: GrammarPalette.orange)
+        }
+
+        if let notation {
+            let notationLabel = UILabel.grammarLabel(size: 13, color: GrammarPalette.textSecondary)
+            notationLabel.text = notation
+            contentStack.addArrangedSubview(notationLabel)
+        }
 
         guard lesson != nil else { return }
-        let lessonButton = UIButton(type: .system)
-        lessonButton.setTitle("Открыть полный урок →", for: .normal)
-        lessonButton.titleLabel?.font = UIFontMetrics(forTextStyle: .headline)
-            .scaledFont(for: .systemFont(ofSize: 16, weight: .bold))
+        var configuration = UIButton.Configuration.filled()
+        configuration.title = "Открыть полный урок →"
+        configuration.baseBackgroundColor = GrammarPalette.turquoise
+        configuration.baseForegroundColor = GrammarPalette.background
+        configuration.background.cornerRadius = 14
+        configuration.cornerStyle = .fixed
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
+        configuration.titleLineBreakMode = .byWordWrapping
+        configuration.titleAlignment = .center
+        configuration.buttonSize = .large
+        let lessonButton = UIButton(configuration: configuration)
         lessonButton.titleLabel?.adjustsFontForContentSizeCategory = true
-        lessonButton.backgroundColor = GrammarPalette.turquoise
-        lessonButton.tintColor = GrammarPalette.background
-        lessonButton.layer.cornerRadius = 14
         lessonButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 54).isActive = true
         lessonButton.addTarget(self, action: #selector(openLesson), for: .touchUpInside)
         contentStack.addArrangedSubview(lessonButton)
