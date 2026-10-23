@@ -4,6 +4,56 @@
  classes = {};
  objectVersion = 56;
  objects = {
+	B36BC84A82B042FE94EC9152 = {
+		isa = PBXFileReference;
+		path = LessonUnlockRuleTests.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	71CEEC9AE765437B8888F2D7 = {
+		isa = PBXBuildFile;
+		fileRef = B36BC84A82B042FE94EC9152;
+	};
+	A01605DF7BC74F0BB26BFD77 = {
+		isa = PBXFileReference;
+		path = CoreDataProgressRepositoryTests.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	F829F1BFE7384CAAAD15801E = {
+		isa = PBXBuildFile;
+		fileRef = A01605DF7BC74F0BB26BFD77;
+	};
+	BDC9BADDC39541238A97046C = {
+		isa = PBXFileReference;
+		path = CoreDataProgressRepositoryKnownIssueTests.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	5074A40BDAD040D9BA32C5A6 = {
+		isa = PBXBuildFile;
+		fileRef = BDC9BADDC39541238A97046C;
+	};
+	06A5504BBFB8477E8EA49443 = {
+		isa = PBXFileReference;
+		path = GrammarContentTests.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	FF100143968844AFB3ED093A = {
+		isa = PBXBuildFile;
+		fileRef = 06A5504BBFB8477E8EA49443;
+	};
+	0CE546EB4F2A45F393B8D285 = {
+		isa = PBXFileReference;
+		path = GrammarReferenceRoutingTests.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	95F15A772D4044E1B13D35BF = {
+		isa = PBXBuildFile;
+		fileRef = 0CE546EB4F2A45F393B8D285;
+	};
 	5782FE3C1E184F5D9066CE3D = {
 		isa = PBXFileReference;
 		path = GrammarTensesMatrixViewController.swift;
@@ -420,6 +470,11 @@
 		isa = PBXGroup;
 		children = (
 	0C7DC15CB096D228B1460CF9,
+	B36BC84A82B042FE94EC9152,
+	A01605DF7BC74F0BB26BFD77,
+	BDC9BADDC39541238A97046C,
+	06A5504BBFB8477E8EA49443,
+	0CE546EB4F2A45F393B8D285,
 );
 		path = EnglishGrammarTests;
 		sourceTree = "<group>";
@@ -496,6 +551,11 @@
 		buildActionMask = 2147483647;
 		files = (
 	4157E76CA5F41CC7F4ECBFEC,
+	71CEEC9AE765437B8888F2D7,
+	F829F1BFE7384CAAAD15801E,
+	5074A40BDAD040D9BA32C5A6,
+	FF100143968844AFB3ED093A,
+	95F15A772D4044E1B13D35BF,
 );
 		runOnlyForDeploymentPostprocessing = 0;
 	};
