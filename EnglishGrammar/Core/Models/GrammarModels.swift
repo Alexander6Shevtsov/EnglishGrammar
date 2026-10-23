@@ -1,3 +1,11 @@
+//
+//  GrammarModels.swift
+//  EnglishGrammar
+//
+//  Maintainer: Alexander Shevtsov
+//  Copyright © 2026 Alexander Shevtsov.
+//
+
 import Foundation
 
 struct GrammarSection: Codable, Identifiable, Sendable {

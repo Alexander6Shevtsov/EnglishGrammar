@@ -1,3 +1,11 @@
+//
+//  ProgressRepository.swift
+//  EnglishGrammar
+//
+//  Maintainer: Alexander Shevtsov
+//  Copyright © 2026 Alexander Shevtsov.
+//
+
 import CoreData
 import Foundation
 

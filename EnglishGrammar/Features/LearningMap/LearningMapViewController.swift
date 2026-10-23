@@ -1,3 +1,11 @@
+//
+//  LearningMapViewController.swift
+//  EnglishGrammar
+//
+//  Maintainer: Alexander Shevtsov
+//  Copyright © 2026 Alexander Shevtsov.
+//
+
 import UIKit
 
 @MainActor
@@ -40,7 +48,11 @@ final class LearningMapViewController: UIViewController {
 
     func showLoadingError(_ error: Error) {
         loadViewIfNeeded()
-        let alert = UIAlertController(title: "Ошибка загрузки", message: error.localizedDescription, preferredStyle: .alert)
+		let alert = UIAlertController(
+			title: "Ошибка загрузки",
+			message: error.localizedDescription,
+			preferredStyle: .alert
+		)
         alert.addAction(UIAlertAction(title: "Понятно", style: .default))
         present(alert, animated: true)
     }
@@ -63,14 +75,26 @@ extension LearningMapViewController: UITableViewDataSource, UITableViewDelegate 
         let group = sections[indexPath.section]
         let lesson = group.lessons[indexPath.row]
         let completed = progressRepository?.completedLessonIDs() ?? []
-        let unlocked = LessonUnlockRule.isUnlocked(at: indexPath.row, lessons: group.lessons, completedIDs: completed)
+		let unlocked = LessonUnlockRule.isUnlocked(
+			at: indexPath.row,
+			lessons: group.lessons,
+			completedIDs: completed
+		)
         var content = cell.defaultContentConfiguration()
         content.text = lesson.title
         content.secondaryText = lesson.subtitle
-        content.textProperties.color = unlocked ? GrammarPalette.textPrimary : GrammarPalette.textSecondary
+        content.textProperties.color = unlocked
+		? GrammarPalette.textPrimary
+		: GrammarPalette.textSecondary
         content.secondaryTextProperties.color = GrammarPalette.textSecondary
-        content.image = UIImage(systemName: completed.contains(lesson.id) ? "checkmark.circle.fill" : (unlocked ? "book.closed.fill" : "lock.fill"))
-        content.imageProperties.tintColor = completed.contains(lesson.id) ? GrammarPalette.mint : GrammarPalette.accent(for: group.accent)
+		content.image = UIImage(
+			systemName: completed.contains(lesson.id) ? "checkmark.circle.fill" : (
+				unlocked ? "book.closed.fill" : "lock.fill"
+			)
+		)
+		content.imageProperties.tintColor = completed
+			.contains(lesson.id) ? GrammarPalette.mint : GrammarPalette
+			.accent(for: group.accent)
         cell.contentConfiguration = content
         cell.accessoryType = unlocked ? .disclosureIndicator : .none
         cell.backgroundColor = GrammarPalette.surface
@@ -81,8 +105,16 @@ extension LearningMapViewController: UITableViewDataSource, UITableViewDelegate 
         tableView.deselectRow(at: indexPath, animated: true)
         let group = sections[indexPath.section]
         let completed = progressRepository?.completedLessonIDs() ?? []
-        guard LessonUnlockRule.isUnlocked(at: indexPath.row, lessons: group.lessons, completedIDs: completed) else {
-            let alert = UIAlertController(title: "Урок пока закрыт", message: "Сначала завершите предыдущую станцию раздела.", preferredStyle: .alert)
+		guard LessonUnlockRule.isUnlocked(
+			at: indexPath.row,
+			lessons: group.lessons,
+			completedIDs: completed
+		) else {
+			let alert = UIAlertController(
+				title: "Урок пока закрыт",
+				message: "Сначала завершите предыдущую станцию раздела.",
+				preferredStyle: .alert
+			)
             alert.addAction(UIAlertAction(title: "Понятно", style: .default))
             present(alert, animated: true)
             return

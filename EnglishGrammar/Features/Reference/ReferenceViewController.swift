@@ -1,3 +1,11 @@
+//
+//  ReferenceViewController.swift
+//  EnglishGrammar
+//
+//  Maintainer: Alexander Shevtsov
+//  Copyright © 2026 Alexander Shevtsov.
+//
+
 import UIKit
 
 @MainActor
