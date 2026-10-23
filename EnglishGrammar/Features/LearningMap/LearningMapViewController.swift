@@ -290,6 +290,14 @@ private final class GrammarSectionViewController: UIViewController {
     private let section: GrammarSection
     private let progressRepository: ProgressRepository
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
+    private let headerContainer = UIView()
+    private let headerStack = UIStackView.vertical(spacing: 12)
+    private let progressLabel = UILabel.grammarLabel(
+        size: 14,
+        weight: .semibold,
+        color: GrammarPalette.textSecondary
+    )
+    private let progressBar = UIProgressView(progressViewStyle: .default)
 
     init(section: GrammarSection, progressRepository: ProgressRepository) {
         self.section = section
@@ -310,30 +318,71 @@ private final class GrammarSectionViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "LessonCell")
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 86
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        headerContainer.translatesAutoresizingMaskIntoConstraints = false
+        headerStack.translatesAutoresizingMaskIntoConstraints = false
+        headerContainer.backgroundColor = GrammarPalette.background
+
+        let subtitleLabel = UILabel.grammarLabel(
+            size: 17,
+            weight: .semibold,
+            color: GrammarPalette.textPrimary
+        )
+        subtitleLabel.text = section.subtitle
+
+        progressBar.progressTintColor = GrammarPalette.accent(for: section.accent)
+        progressBar.trackTintColor = GrammarPalette.surfaceRaised
+        progressBar.layer.cornerRadius = 3
+        progressBar.clipsToBounds = true
+        progressBar.heightAnchor.constraint(equalToConstant: 7).isActive = true
+
+        headerStack.addArrangedSubview(subtitleLabel)
+        headerStack.addArrangedSubview(progressLabel)
+        headerStack.addArrangedSubview(progressBar)
+        headerContainer.addSubview(headerStack)
+        view.addSubview(headerContainer)
         view.addSubview(tableView)
 
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            headerContainer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            headerContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            headerContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            headerStack.topAnchor.constraint(equalTo: headerContainer.topAnchor, constant: 16),
+            headerStack.leadingAnchor.constraint(equalTo: headerContainer.leadingAnchor, constant: 20),
+            headerStack.trailingAnchor.constraint(equalTo: headerContainer.trailingAnchor, constant: -20),
+            headerStack.bottomAnchor.constraint(equalTo: headerContainer.bottomAnchor, constant: -16),
+            tableView.topAnchor.constraint(equalTo: headerContainer.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+        refreshProgress()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        refreshProgress()
         tableView.reloadData()
+    }
+
+    private func refreshProgress() {
+        let completedIDs = progressRepository.completedLessonIDs()
+        let completedCount = section.lessons.filter {
+            completedIDs.contains($0.id)
+        }.count
+        let lessonCount = section.lessons.count
+        progressLabel.text = "Пройдено \(completedCount) из \(lessonCount) станций"
+        let progressValue = lessonCount == 0
+            ? 0 : Float(completedCount) / Float(lessonCount)
+        progressBar.setProgress(progressValue, animated: false)
     }
 }
 
 extension GrammarSectionViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection sectionIndex: Int) -> Int {
         section.lessons.count
-    }
-
-    func tableView(_ tableView: UITableView, titleForHeaderInSection sectionIndex: Int) -> String? {
-        section.subtitle
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -356,7 +405,11 @@ extension GrammarSectionViewController: UITableViewDataSource, UITableViewDelega
             ? "checkmark.circle.fill" : (isUnlocked ? "book.closed.fill" : "lock.fill")
         content.image = UIImage(systemName: symbolName)
         content.imageProperties.tintColor = completedIDs.contains(lesson.id)
-            ? GrammarPalette.mint : GrammarPalette.accent(for: section.accent)
+            ? GrammarPalette.mint : (
+                isUnlocked
+                    ? GrammarPalette.accent(for: section.accent)
+                    : GrammarPalette.textSecondary.withAlphaComponent(0.65)
+            )
         cell.contentConfiguration = content
         cell.backgroundColor = GrammarPalette.surface
         cell.accessoryType = isUnlocked ? .disclosureIndicator : .none
