@@ -4,6 +4,26 @@
  classes = {};
  objectVersion = 56;
  objects = {
+	B87EB16A53484FC68219D583 = {
+		isa = PBXFileReference;
+		path = GrammarComparisonsViewController.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	8D98FFF2CFC141B495E823E3 = {
+		isa = PBXBuildFile;
+		fileRef = B87EB16A53484FC68219D583;
+	};
+	1B4A1D719E4042AD9A8AD9D8 = {
+		isa = PBXFileReference;
+		path = GrammarReferenceDetailViewController.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	62381FEF69CA4A47AE899215 = {
+		isa = PBXBuildFile;
+		fileRef = 1B4A1D719E4042AD9A8AD9D8;
+	};
 	D5BEDC1F54A9AD9503E043CE = {
 		isa = PBXFileReference;
 		path = AppCoordinator.swift;
@@ -304,6 +324,8 @@
 		isa = PBXGroup;
 		children = (
 	7BC922EE5E5ECEE5A377F24E,
+	B87EB16A53484FC68219D583,
+	1B4A1D719E4042AD9A8AD9D8,
 );
 		path = Reference;
 		sourceTree = "<group>";
@@ -428,6 +450,8 @@
 	949DD51CA486A36E036E670A,
 	CEB6038FC9F2379F48DE81C9,
 	7DAE6AD785DE32B9D2E20757,
+	8D98FFF2CFC141B495E823E3,
+	62381FEF69CA4A47AE899215,
 );
 		runOnlyForDeploymentPostprocessing = 0;
 	};
