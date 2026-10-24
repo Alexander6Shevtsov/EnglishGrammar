@@ -4,6 +4,26 @@
  classes = {};
  objectVersion = 56;
  objects = {
+	2EB7565DB123459BAE93F34E = {
+		isa = PBXFileReference;
+		path = LessonViewControllerTests.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	310B8FD74BDA4F4190F47695 = {
+		isa = PBXBuildFile;
+		fileRef = 2EB7565DB123459BAE93F34E;
+	};
+	725609A7ED0A48D4AAB79822 = {
+		isa = PBXFileReference;
+		path = AppCoordinatorNavigationTests.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	C060893DE37944E399D261D1 = {
+		isa = PBXBuildFile;
+		fileRef = 725609A7ED0A48D4AAB79822;
+	};
 	B36BC84A82B042FE94EC9152 = {
 		isa = PBXFileReference;
 		path = LessonUnlockRuleTests.swift;
@@ -470,6 +490,8 @@
 		isa = PBXGroup;
 		children = (
 	0C7DC15CB096D228B1460CF9,
+	2EB7565DB123459BAE93F34E,
+	725609A7ED0A48D4AAB79822,
 	B36BC84A82B042FE94EC9152,
 	A01605DF7BC74F0BB26BFD77,
 	BDC9BADDC39541238A97046C,
@@ -551,6 +573,8 @@
 		buildActionMask = 2147483647;
 		files = (
 	4157E76CA5F41CC7F4ECBFEC,
+	310B8FD74BDA4F4190F47695,
+	C060893DE37944E399D261D1,
 	71CEEC9AE765437B8888F2D7,
 	F829F1BFE7384CAAAD15801E,
 	5074A40BDAD040D9BA32C5A6,

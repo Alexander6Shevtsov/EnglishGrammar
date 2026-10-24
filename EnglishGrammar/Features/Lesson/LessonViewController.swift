@@ -13,17 +13,26 @@ final class LessonViewController: UIViewController {
     var onStartQuiz: ((GrammarLesson) -> Void)?
 
     private let lesson: GrammarLesson
-    private let allowsPractice: Bool
+    private let isPracticeAvailable: @MainActor (GrammarLesson) -> Bool
     private let scrollView = UIScrollView()
     private let pageStack = UIStackView.vertical(spacing: 18)
     private let tabContentStack = UIStackView.vertical(spacing: 16)
     private let tabSelector = UISegmentedControl(items: ["Теория", "Схема", "Примеры"])
-    private let footerView = UIView()
+    private let footerView = UIStackView.vertical(spacing: 0)
     private let practiceButton = UIButton(type: .system)
+    private let lockedPracticeLabel = UILabel.grammarLabel(
+        size: 15,
+        weight: .semibold,
+        color: GrammarPalette.textSecondary
+    )
+    private var practiceButtonHeightConstraint: NSLayoutConstraint?
 
-    init(lesson: GrammarLesson, allowsPractice: Bool = true) {
+    init(
+        lesson: GrammarLesson,
+        isPracticeAvailable: @escaping @MainActor (GrammarLesson) -> Bool
+    ) {
         self.lesson = lesson
-        self.allowsPractice = allowsPractice
+        self.isPracticeAvailable = isPracticeAvailable
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -40,6 +49,11 @@ final class LessonViewController: UIViewController {
         configureTabs()
         configurePracticeButton()
         renderSelectedTab()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        refreshPracticeAvailability()
     }
 
     private func configureLayout() {
@@ -114,25 +128,9 @@ final class LessonViewController: UIViewController {
     }
 
     private func configurePracticeButton() {
-        guard allowsPractice else {
-            let lockedLabel = UILabel.grammarLabel(
-                size: 15,
-                weight: .semibold,
-                color: GrammarPalette.textSecondary
-            )
-            lockedLabel.text = "Практика закрыта. Пройдите предыдущий урок на карте."
-            lockedLabel.textAlignment = .center
-            lockedLabel.translatesAutoresizingMaskIntoConstraints = false
-            footerView.addSubview(lockedLabel)
-
-            NSLayoutConstraint.activate([
-                lockedLabel.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 14),
-                lockedLabel.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 20),
-                lockedLabel.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -20),
-                lockedLabel.bottomAnchor.constraint(equalTo: footerView.bottomAnchor, constant: -14)
-            ])
-            return
-        }
+        footerView.isLayoutMarginsRelativeArrangement = true
+        lockedPracticeLabel.text = "Практика закрыта. Пройдите предыдущий урок на карте."
+        lockedPracticeLabel.textAlignment = .center
         practiceButton.setTitle(
             "Начать практику · \(lesson.questions.count) заданий",
             for: .normal
@@ -144,23 +142,40 @@ final class LessonViewController: UIViewController {
         practiceButton.backgroundColor = GrammarPalette.turquoise
         practiceButton.tintColor = GrammarPalette.background
         practiceButton.layer.cornerRadius = 14
-        practiceButton.isEnabled = !lesson.questions.isEmpty
-        practiceButton.alpha = lesson.questions.isEmpty ? 0.5 : 1
         practiceButton.translatesAutoresizingMaskIntoConstraints = false
         practiceButton.addTarget(
             self,
             action: #selector(startQuiz),
             for: .touchUpInside
         )
-        footerView.addSubview(practiceButton)
+        footerView.addArrangedSubview(practiceButton)
+        footerView.addArrangedSubview(lockedPracticeLabel)
+        practiceButtonHeightConstraint = practiceButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 54)
+        refreshPracticeAvailability()
+    }
 
-        NSLayoutConstraint.activate([
-            practiceButton.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 12),
-            practiceButton.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 20),
-            practiceButton.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -20),
-            practiceButton.bottomAnchor.constraint(equalTo: footerView.bottomAnchor, constant: -12),
-            practiceButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 54)
-        ])
+    @discardableResult
+    private func refreshPracticeAvailability() -> Bool {
+        let allowsPractice = isPracticeAvailable(lesson)
+        let canStartPractice = allowsPractice && !lesson.questions.isEmpty
+        if !allowsPractice {
+            practiceButtonHeightConstraint?.isActive = false
+        }
+        practiceButton.isHidden = !allowsPractice
+        lockedPracticeLabel.isHidden = allowsPractice
+        if allowsPractice {
+            practiceButtonHeightConstraint?.isActive = true
+        }
+        practiceButton.isEnabled = canStartPractice
+        practiceButton.alpha = canStartPractice ? 1 : 0.5
+        let verticalMargin: CGFloat = allowsPractice ? 12 : 14
+        footerView.layoutMargins = UIEdgeInsets(
+            top: verticalMargin,
+            left: 20,
+            bottom: verticalMargin,
+            right: 20
+        )
+        return canStartPractice
     }
 
     @objc private func changeSelectedTab() {
@@ -318,7 +333,7 @@ final class LessonViewController: UIViewController {
     }
 
     @objc private func startQuiz() {
-        guard allowsPractice else { return }
+        guard refreshPracticeAvailability() else { return }
         onStartQuiz?(lesson)
     }
 }

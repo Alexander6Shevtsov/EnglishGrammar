@@ -90,16 +90,18 @@ final class AppCoordinator {
         _ lesson: GrammarLesson,
         from navigation: UINavigationController? = nil
     ) {
-        let allowsPractice = isPracticeAvailable(for: lesson)
+        let sourceNavigation = navigation ?? mapNavigation
         let lessonController = LessonViewController(
             lesson: lesson,
-            allowsPractice: allowsPractice
+            isPracticeAvailable: { [weak self] selectedLesson in
+                self?.isPracticeAvailable(for: selectedLesson) ?? false
+            }
         )
-        lessonController.onStartQuiz = { [weak self] selectedLesson in
+        lessonController.onStartQuiz = { [weak self, weak sourceNavigation] selectedLesson in
             guard let self, self.isPracticeAvailable(for: selectedLesson) else { return }
-            self.showQuiz(selectedLesson, from: navigation)
+            self.showQuiz(selectedLesson, from: sourceNavigation)
         }
-        (navigation ?? mapNavigation).pushViewController(lessonController, animated: true)
+        sourceNavigation.pushViewController(lessonController, animated: true)
     }
 
     private func isPracticeAvailable(for lesson: GrammarLesson) -> Bool {
@@ -116,10 +118,22 @@ final class AppCoordinator {
     }
 
     private func showQuiz(_ lesson: GrammarLesson, from navigation: UINavigationController?) {
+        let sourceNavigation = navigation ?? mapNavigation
         let quizController = QuizViewController(
             viewModel: QuizViewModel(lesson: lesson),
             progressRepository: progressRepository
         )
-        (navigation ?? mapNavigation).pushViewController(quizController, animated: true)
+        quizController.onReturnToMap = { [weak self, weak sourceNavigation] in
+            self?.showMapRoot(from: sourceNavigation)
+        }
+        sourceNavigation.pushViewController(quizController, animated: true)
+    }
+
+    private func showMapRoot(from sourceNavigation: UINavigationController?) {
+        if sourceNavigation !== mapNavigation {
+            sourceNavigation?.popToRootViewController(animated: false)
+        }
+        mapNavigation.popToRootViewController(animated: false)
+        tabs.selectedViewController = mapNavigation
     }
 }

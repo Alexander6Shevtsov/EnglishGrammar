@@ -10,6 +10,8 @@ import UIKit
 
 @MainActor
 final class QuizViewController: UIViewController {
+    var onReturnToMap: (() -> Void)?
+
     private let viewModel: QuizViewModel
     private let progressRepository: ProgressRepository
 
@@ -255,7 +257,7 @@ final class QuizViewController: UIViewController {
                 preferredStyle: .alert
             )
             alert.addAction(UIAlertAction(title: "К карте", style: .default) { [weak self] _ in
-                self?.navigationController?.popToRootViewController(animated: true)
+                self?.onReturnToMap?()
             })
             present(alert, animated: true)
         } catch {
