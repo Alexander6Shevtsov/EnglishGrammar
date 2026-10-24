@@ -10,8 +10,7 @@ import UIKit
 
 @MainActor
 final class ProgressViewController: UIViewController {
-    private let progressRepository: ProgressRepository
-    private var sections: [GrammarSection] = []
+    private let viewModel: ProgressViewModel
 
     private let scrollView = UIScrollView()
     private let contentStack = UIStackView.vertical(spacing: 22)
@@ -26,8 +25,8 @@ final class ProgressViewController: UIViewController {
     private let remainingValueLabel = UILabel.grammarLabel(size: 28, weight: .bold)
     private let sectionsStack = UIStackView.vertical(spacing: 12)
 
-    init(progressRepository: ProgressRepository) {
-        self.progressRepository = progressRepository
+    init(viewModel: ProgressViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -49,8 +48,8 @@ final class ProgressViewController: UIViewController {
     }
 
     func configure(sections: [GrammarSection]) {
-        self.sections = sections
-        refreshProgress()
+        viewModel.updateSections(sections)
+        renderProgress()
     }
 
     private func configureLayout() {
@@ -197,10 +196,9 @@ final class ProgressViewController: UIViewController {
         return cardView
     }
 
-    private func makeSectionCard(
-        section: GrammarSection,
-        completedCount: Int
-    ) -> UIView {
+    private func makeSectionCard(_ progress: CourseProgress.Section) -> UIView {
+        let section = progress.section
+        let completedCount = progress.completedLessonCount
         let accentColor = GrammarPalette.accent(for: section.accent)
         let cardView = UIView()
         cardView.backgroundColor = GrammarPalette.surface
@@ -227,7 +225,7 @@ final class ProgressViewController: UIViewController {
             weight: .semibold,
             color: accentColor
         )
-        countLabel.text = "\(completedCount) / \(section.lessons.count)"
+        countLabel.text = "\(completedCount) / \(progress.totalLessonCount)"
         countLabel.textAlignment = .right
         countLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
         headingRow.addArrangedSubview(countLabel)
@@ -238,12 +236,11 @@ final class ProgressViewController: UIViewController {
         sectionProgressView.layer.cornerRadius = 3
         sectionProgressView.clipsToBounds = true
         sectionProgressView.heightAnchor.constraint(equalToConstant: 6).isActive = true
-        sectionProgressView.progress = section.lessons.isEmpty
-            ? 0 : Float(completedCount) / Float(section.lessons.count)
+        sectionProgressView.progress = Float(progress.fractionCompleted)
         cardStack.addArrangedSubview(sectionProgressView)
 
         cardView.isAccessibilityElement = true
-        cardView.accessibilityLabel = "\(section.title), пройдено \(completedCount) из \(section.lessons.count) станций"
+        cardView.accessibilityLabel = "\(section.title), пройдено \(completedCount) из \(progress.totalLessonCount) станций"
 
         NSLayoutConstraint.activate([
             cardStack.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 18),
@@ -255,39 +252,27 @@ final class ProgressViewController: UIViewController {
     }
 
     private func refreshProgress() {
+        viewModel.refresh()
+        renderProgress()
+    }
+
+    private func renderProgress() {
         guard isViewLoaded else { return }
 
-        let completedIDs = progressRepository.completedLessonIDs()
-        let totalCount = sections.reduce(0) { totalCount, section in
-            totalCount + section.lessons.count
-        }
-        let completedCount = sections.reduce(0) { currentCount, section in
-            currentCount + section.lessons.filter {
-                completedIDs.contains($0.id)
-            }.count
-        }
-        let completionRate = totalCount == 0
-            ? 0.0 : Double(completedCount) / Double(totalCount)
-        let roundedPercent = Int((completionRate * 100).rounded())
-
-        percentLabel.text = "\(roundedPercent)% пройдено"
-        completedLabel.text = "\(completedCount) из \(totalCount) станций завершено"
-        completedValueLabel.text = "\(completedCount)"
-        remainingValueLabel.text = "\(totalCount - completedCount)"
-        overallProgressView.setProgress(Float(completionRate), animated: false)
+        let state = viewModel.state
+        percentLabel.text = "\(state.completionPercentage)% пройдено"
+        completedLabel.text = "\(state.completedLessonCount) из \(state.totalLessonCount) станций завершено"
+        completedValueLabel.text = "\(state.completedLessonCount)"
+        remainingValueLabel.text = "\(state.remainingLessonCount)"
+        overallProgressView.setProgress(Float(state.fractionCompleted), animated: false)
 
         sectionsStack.arrangedSubviews.forEach { cardView in
             sectionsStack.removeArrangedSubview(cardView)
             cardView.removeFromSuperview()
         }
 
-        for section in sections {
-            let sectionCompletedCount = section.lessons.filter {
-                completedIDs.contains($0.id)
-            }.count
-            sectionsStack.addArrangedSubview(
-                makeSectionCard(section: section, completedCount: sectionCompletedCount)
-            )
+        for sectionProgress in state.sections {
+            sectionsStack.addArrangedSubview(makeSectionCard(sectionProgress))
         }
     }
 }

@@ -10,10 +10,18 @@ import CoreData
 import Foundation
 
 @MainActor
-protocol ProgressRepository: AnyObject {
+protocol LessonCompletionReading: AnyObject {
     func completedLessonIDs() -> Set<String>
-    func bestScore(for id: String) -> Int
+}
+
+@MainActor
+protocol QuizResultSaving: AnyObject {
     func saveResult(lessonID: String, correctAnswers: Int, totalQuestions: Int) throws
+}
+
+@MainActor
+protocol ProgressRepository: LessonCompletionReading, QuizResultSaving {
+    func bestScore(for id: String) -> Int
 }
 
 @MainActor
@@ -88,8 +96,10 @@ final class CoreDataProgressRepository: ProgressRepository {
         let record = findProgress(for: lessonID) ?? NSEntityDescription.insertNewObject(forEntityName: "LessonProgress", into: context)
         let currentScore = record.value(forKey: "bestScore") as? Int ?? 0
         let wasCompleted = record.value(forKey: "isCompleted") as? Bool ?? false
-        let requiredCorrectAnswers = (totalQuestions / 10) * 7 + ((totalQuestions % 10) * 7 + 9) / 10
-        let passedAttempt = correctAnswers >= requiredCorrectAnswers
+        let passedAttempt = QuizPassingRule.isPassing(
+            correctAnswers: correctAnswers,
+            totalQuestions: totalQuestions
+        )
         record.setValue(lessonID, forKey: "lessonID")
         record.setValue(max(currentScore, correctAnswers), forKey: "bestScore")
         record.setValue(wasCompleted || passedAttempt, forKey: "isCompleted")

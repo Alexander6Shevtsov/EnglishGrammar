@@ -24,7 +24,9 @@ final class AppCoordinator {
     }
 
     func start(in window: UIWindow) {
-        let mapController = LearningMapViewController()
+        let mapController = LearningMapViewController(
+            viewModel: LearningMapViewModel(progressRepository: progressRepository)
+        )
         mapController.onLessonSelected = { [weak self] lesson in
             self?.showLesson(lesson)
         }
@@ -35,7 +37,9 @@ final class AppCoordinator {
             tag: 0
         )
 
-        let progressController = ProgressViewController(progressRepository: progressRepository)
+        let progressController = ProgressViewController(
+            viewModel: ProgressViewModel(progressRepository: progressRepository)
+        )
         progressNavigation.viewControllers = [progressController]
         progressNavigation.tabBarItem = UITabBarItem(
             title: "Прогресс",
@@ -74,10 +78,7 @@ final class AppCoordinator {
             do {
                 let loadedSections = try await self.contentRepository.loadSections()
                 self.sections = loadedSections
-                mapController.configure(
-                    sections: loadedSections,
-                    progressRepository: self.progressRepository
-                )
+                mapController.configure(sections: loadedSections)
                 progressController.configure(sections: loadedSections)
                 referenceController.configure(sections: loadedSections)
             } catch {

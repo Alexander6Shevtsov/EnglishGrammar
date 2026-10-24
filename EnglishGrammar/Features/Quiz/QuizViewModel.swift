@@ -25,6 +25,10 @@ final class QuizViewModel {
     var question: GrammarQuestion { questions[questionIndex] }
     var questionCount: Int { questions.count }
     var isLastQuestion: Bool { questionIndex == questionCount - 1 }
+    var passingPercentage: Int { QuizPassingRule.requiredPercentage }
+    var hasPassingScore: Bool {
+        QuizPassingRule.isPassing(correctAnswers: correctAnswers, totalQuestions: questionCount)
+    }
 
     convenience init(lesson: GrammarLesson) {
         var generator = SystemRandomNumberGenerator()

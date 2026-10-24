@@ -4,6 +4,22 @@
  classes = {};
  objectVersion = 56;
  objects = {
+		AA98FD8633464457BB47D2A1 /* CourseProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseProgress.swift; sourceTree = "<group>"; };
+		6756064146A44417813DCBE5 /* CourseProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA98FD8633464457BB47D2A1 /* CourseProgress.swift */; };
+		5F30857DC1D14E6DA18866FF /* QuizPassingRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizPassingRule.swift; sourceTree = "<group>"; };
+		D01F234365954B21A2158D0E /* QuizPassingRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F30857DC1D14E6DA18866FF /* QuizPassingRule.swift */; };
+		9CE40572E6D647469C887B94 /* LearningMapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearningMapViewModel.swift; sourceTree = "<group>"; };
+		87E67330BB3C467388F34BE3 /* LearningMapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CE40572E6D647469C887B94 /* LearningMapViewModel.swift */; };
+		1DC2B760F498439894FE4D22 /* ProgressViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressViewModel.swift; sourceTree = "<group>"; };
+		5167A63DA81E43F7BFB6FE0E /* ProgressViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DC2B760F498439894FE4D22 /* ProgressViewModel.swift */; };
+		88C4D1A9A99D4D0D8D9E192F /* ProgressViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressViewModelTests.swift; sourceTree = "<group>"; };
+		4BDD6CC15C55492BB01D5229 /* ProgressViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88C4D1A9A99D4D0D8D9E192F /* ProgressViewModelTests.swift */; };
+		9671D98CA6C147CE88FF7BCA /* LearningMapViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearningMapViewModelTests.swift; sourceTree = "<group>"; };
+		17F2312227924B55B83D6690 /* LearningMapViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9671D98CA6C147CE88FF7BCA /* LearningMapViewModelTests.swift */; };
+		4298915BD4EA4851BAF1E6C1 /* QuizPassingRuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizPassingRuleTests.swift; sourceTree = "<group>"; };
+		4FE2435733924F9A83AFE19F /* QuizPassingRuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4298915BD4EA4851BAF1E6C1 /* QuizPassingRuleTests.swift */; };
+		D66ABDBB263F4E2E9D9AE42D /* ProgressPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressPresentationTests.swift; sourceTree = "<group>"; };
+		0F47F8272BC4457E85A35788 /* ProgressPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D66ABDBB263F4E2E9D9AE42D /* ProgressPresentationTests.swift */; };
 	B62949BB157D4C3BB5F65FE7 = {
 		isa = PBXFileReference;
 		path = QuizAnswerShufflingTests.swift;
@@ -392,6 +408,7 @@
 	70596A5943A92D7AD125B908 = {
 		isa = PBXGroup;
 		children = (
+	AA98FD8633464457BB47D2A1 /* CourseProgress.swift */,
 	0DEC54B6923986DB4EC773FF,
 );
 		path = Models;
@@ -400,6 +417,7 @@
 	D0587B0168A8158DC30105AD = {
 		isa = PBXGroup;
 		children = (
+	5F30857DC1D14E6DA18866FF /* QuizPassingRule.swift */,
 	2F18C302755163C421A7D8DC,
 	76E28330EC88ADA562EF5065,
 	C61C832238F2BBE3E4CF6DAA,
@@ -410,6 +428,7 @@
 	0E420C5F5DD0444CA6AFC3E5 = {
 		isa = PBXGroup;
 		children = (
+	9CE40572E6D647469C887B94 /* LearningMapViewModel.swift */,
 	2803E68F3BDD214D2DF98260,
 );
 		path = LearningMap;
@@ -426,6 +445,7 @@
 	D7C1B96AFB43E40EAB2E6321 = {
 		isa = PBXGroup;
 		children = (
+	1DC2B760F498439894FE4D22 /* ProgressViewModel.swift */,
 	25355E76E60513A92E3E0D6C,
 );
 		path = Progress;
@@ -509,6 +529,10 @@
 	55F003D68EEDDE81430C97BE = {
 		isa = PBXGroup;
 		children = (
+	88C4D1A9A99D4D0D8D9E192F /* ProgressViewModelTests.swift */,
+	9671D98CA6C147CE88FF7BCA /* LearningMapViewModelTests.swift */,
+	4298915BD4EA4851BAF1E6C1 /* QuizPassingRuleTests.swift */,
+	D66ABDBB263F4E2E9D9AE42D /* ProgressPresentationTests.swift */,
 	0C7DC15CB096D228B1460CF9,
 	B62949BB157D4C3BB5F65FE7,
 	21581E0B30DF42F9A181E62A,
@@ -568,6 +592,10 @@
 		isa = PBXSourcesBuildPhase;
 		buildActionMask = 2147483647;
 		files = (
+	6756064146A44417813DCBE5 /* CourseProgress.swift in Sources */,
+	D01F234365954B21A2158D0E /* QuizPassingRule.swift in Sources */,
+	87E67330BB3C467388F34BE3 /* LearningMapViewModel.swift in Sources */,
+	5167A63DA81E43F7BFB6FE0E /* ProgressViewModel.swift in Sources */,
 	466992522EFF8A3F5941B07F,
 	F5D64D53F6A1D2048C7190D3,
 	4F4DB560775A140DD6AAA3FF,
@@ -594,6 +622,10 @@
 		isa = PBXSourcesBuildPhase;
 		buildActionMask = 2147483647;
 		files = (
+	4BDD6CC15C55492BB01D5229 /* ProgressViewModelTests.swift in Sources */,
+	17F2312227924B55B83D6690 /* LearningMapViewModelTests.swift in Sources */,
+	4FE2435733924F9A83AFE19F /* QuizPassingRuleTests.swift in Sources */,
+	0F47F8272BC4457E85A35788 /* ProgressPresentationTests.swift in Sources */,
 	4157E76CA5F41CC7F4ECBFEC,
 	EFBB7C48D14344DA96D7F219,
 	D4E8C9F0E9BD4F7087AB7713,
