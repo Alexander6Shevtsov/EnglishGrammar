@@ -1,133 +1,145 @@
 # EnglishGrammar
 
-**A native iPhone app for learning English grammar, one lesson at a time.**
+**Нативное приложение для iPhone: изучение английской грамматики шаг за шагом.**
 
 ![Status: In Development](https://img.shields.io/badge/status-In%20Development-orange)
 ![iOS 16.0+](https://img.shields.io/badge/iOS-16.0%2B-blue)
 ![UIKit](https://img.shields.io/badge/UI-UIKit-2396F3)
 ![XCTest: 59 tests](https://img.shields.io/badge/XCTest-59%20tests-34C759)
 
-An offline learning experience built with **Swift, programmatic UIKit, MVVM + Coordinator, Core Data, and Swift Concurrency**. The app combines a guided learning map, focused practice, and interactive grammar references. Lessons and explanations are in Russian, with English examples and translations.
+Приложение для офлайн-изучения грамматики на **Swift с программной вёрсткой UIKit, архитектурой MVVM + Coordinator, Core Data и Swift Concurrency**. В нём объединены карта последовательного обучения, практика и интерактивные справочники по грамматике. Уроки и объяснения написаны на русском языке и сопровождаются английскими примерами с переводом.
 
-[Screenshots](#app-screenshots) · [Features](#features) · [Grammar Reference](#interactive-grammar-reference) · [Architecture](#architecture) · [Run locally](#run-locally) · [Validation](#validation) · [Roadmap](docs/ROADMAP.md)
+[Скриншоты](#app-screenshots) · [Возможности](#features) · [Справочник по грамматике](#interactive-grammar-reference) · [Архитектура](#architecture) · [Запуск проекта](#run-locally) · [Проверка качества](#validation) · [План развития](docs/ROADMAP.md)
 
-## App Screenshots
+<a name="app-screenshots"></a>
 
-Real screenshots captured from the running app in iOS Simulator on iPhone 16 Pro Max (iOS 18.6). Select any image to open the full-resolution PNG. Scrollable pages show the visible portion of the screen.
+## Скриншоты приложения
+
+Настоящие скриншоты работающего приложения, снятые в iOS Simulator на iPhone 16 Pro Max (iOS 18.6). Нажмите на изображение, чтобы открыть PNG в полном разрешении. Для прокручиваемых страниц показана видимая область экрана.
 
 <table>
   <tr>
     <td align="center">
-      <strong>Learning Map</strong><br>
+      <strong>Карта грамматики</strong><br>
       <a href="docs/screenshots/learning-map.png">
-        <img src="docs/screenshots/learning-map.png" alt="Learning Map with four grammar sections and saved progress" width="340">
+        <img src="docs/screenshots/learning-map.png" alt="Карта грамматики с четырьмя разделами и сохранённым прогрессом" width="340">
       </a>
     </td>
     <td align="center">
-      <strong>Lesson</strong><br>
+      <strong>Урок</strong><br>
       <a href="docs/screenshots/lesson-theory.png">
-        <img src="docs/screenshots/lesson-theory.png" alt="Present Simple lesson with the Theory tab selected" width="340">
+        <img src="docs/screenshots/lesson-theory.png" alt="Урок Present Simple с выбранной вкладкой «Теория»" width="340">
       </a>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <strong>Practice</strong><br>
+      <strong>Практика</strong><br>
       <a href="docs/screenshots/quiz-practice.png">
-        <img src="docs/screenshots/quiz-practice.png" alt="Practice question with three shuffled answer options" width="340">
+        <img src="docs/screenshots/quiz-practice.png" alt="Практическое задание с тремя перемешанными вариантами ответа" width="340">
       </a>
     </td>
     <td align="center">
-      <strong>Progress</strong><br>
+      <strong>Прогресс</strong><br>
       <a href="docs/screenshots/progress.png">
-        <img src="docs/screenshots/progress.png" alt="Progress dashboard with completed and remaining lessons" width="340">
+        <img src="docs/screenshots/progress.png" alt="Экран прогресса с количеством завершённых и оставшихся уроков" width="340">
       </a>
     </td>
   </tr>
 </table>
 
-## Features
+<a name="features"></a>
 
-- **Guided learning map:** four sections, 34 lessons, and 340 multiple-choice questions, all bundled with the app.
-- **Lesson pages:** grammar explanations, sentence patterns, and examples with translations.
-- **Practice with feedback:** answer-specific explanations, correct-answer highlighting, and a running score. A new attempt shuffles the answer options once; their order stays fixed throughout that attempt.
-- **Consistent progression:** the first lesson in each section is available immediately. Completing a lesson with at least **70% correct in one attempt** opens the next lesson in that section.
-- **Persistent progress:** Core Data stores lesson completion and the highest number of correct answers. A completed lesson remains completed after a weaker retake; sections progress independently.
-- **Progress dashboard:** overall completion, completed and remaining lesson counts, and progress by section.
-- **Three interactive references:** tappable cards open detailed rules, formulas, English examples, translations, and links to the corresponding lessons. Reference links preserve practice restrictions.
-- **Native presentation:** a dark interface, shared design tokens, Auto Layout, Dynamic Type text, and accessibility labels for key controls.
+## Возможности
 
-### Curriculum
+- **Карта последовательного обучения:** четыре раздела, 34 урока и 340 вопросов с выбором ответа. Все материалы включены в приложение.
+- **Страницы уроков:** объяснения грамматики, схемы предложений и примеры с переводом.
+- **Практика с обратной связью:** пояснения к выбранному варианту, подсветка правильного ответа и текущий счёт. В начале каждой новой попытки варианты ответов перемешиваются один раз и сохраняют порядок до её завершения.
+- **Последовательное открытие уроков:** первый урок каждого раздела доступен сразу. Результат не ниже **70% правильных ответов в одной попытке** открывает следующий урок в этом разделе.
+- **Сохранение прогресса:** Core Data хранит завершённые уроки и максимальное количество правильных ответов. Пройденный урок остаётся завершённым после менее успешной повторной попытки; прогресс разных разделов независим.
+- **Экран прогресса:** общая доля завершённых уроков, количество изученных и оставшихся уроков, показатели по каждому разделу.
+- **Три интерактивных справочника:** нажатие на карточку открывает правила, формулы, английские примеры, переводы и переходы к соответствующим урокам. Переход из справочника сохраняет ограничения доступа к практике.
+- **Нативный интерфейс:** тёмное оформление, общие дизайн-токены, Auto Layout, поддержка Dynamic Type для текста и метки доступности ключевых элементов управления.
 
-| Section | Lessons | Questions |
+<a name="curriculum"></a>
+
+### Учебная программа
+
+| Раздел | Уроки | Вопросы |
 | --- | ---: | ---: |
-| Foundations and sentence structure | 8 | 80 |
-| English tenses | 12 | 120 |
-| Conditional sentences | 7 | 70 |
-| Comparisons | 7 | 70 |
-| **Total** | **34** | **340** |
+| Основы и структура предложения | 8 | 80 |
+| Времена английского глагола | 12 | 120 |
+| Условные предложения | 7 | 70 |
+| Степени сравнения | 7 | 70 |
+| **Всего** | **34** | **340** |
 
-Each lesson contains 10 questions. The curriculum is decoded from [grammar_content.json](EnglishGrammar/Resources/grammar_content.json); question text and explanations stay unchanged when answer options are shuffled.
+Каждый урок содержит 10 вопросов. Учебные материалы декодируются из [grammar_content.json](EnglishGrammar/Resources/grammar_content.json); перемешивание вариантов не меняет тексты вопросов и объяснений.
 
-## Interactive Grammar Reference
+<a name="interactive-grammar-reference"></a>
 
-The Quick Reference screen brings together the three interactive guides. The screenshots below show the real UIKit interface, with tappable cards leading to rules, examples, and lessons.
+## Интерактивный справочник по грамматике
+
+Экран «Шпаргалки» объединяет три интерактивных справочника. Ниже показан настоящий интерфейс на UIKit: карточки открывают правила, примеры и связанные уроки.
 
 <table>
   <tr>
     <td align="center">
-      <strong>Quick Reference</strong><br>
+      <strong>Шпаргалки</strong><br>
       <a href="docs/screenshots/quick-reference.png">
-        <img src="docs/screenshots/quick-reference.png" alt="Quick Reference home with grammar topic categories" width="340">
+        <img src="docs/screenshots/quick-reference.png" alt="Главный экран «Шпаргалки» с категориями грамматических тем" width="340">
       </a>
     </td>
     <td align="center">
-      <strong>12 Tenses</strong><br>
+      <strong>12 времён</strong><br>
       <a href="docs/screenshots/tenses-reference.png">
-        <img src="docs/screenshots/tenses-reference.png" alt="12-tenses reference with time groups and formula cards" width="340">
+        <img src="docs/screenshots/tenses-reference.png" alt="Справочник 12 времён с группами по времени и карточками формул" width="340">
       </a>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <strong>Conditionals</strong><br>
+      <strong>Условные предложения</strong><br>
       <a href="docs/screenshots/conditionals-reference.png">
-        <img src="docs/screenshots/conditionals-reference.png" alt="Conditional sentence reference with Zero through Mixed Conditional cards" width="340">
+        <img src="docs/screenshots/conditionals-reference.png" alt="Справочник условных предложений с карточками от Zero до Mixed Conditional" width="340">
       </a>
     </td>
     <td align="center">
-      <strong>Comparisons</strong><br>
+      <strong>Степени сравнения</strong><br>
       <a href="docs/screenshots/comparisons-reference.png">
-        <img src="docs/screenshots/comparisons-reference.png" alt="Comparative and superlative reference with formulas and spelling rules" width="340">
+        <img src="docs/screenshots/comparisons-reference.png" alt="Справочник сравнительной и превосходной степеней с формулами и правилами написания" width="340">
       </a>
     </td>
   </tr>
 </table>
 
-| Reference | Content |
+| Справочник | Содержание |
 | --- | --- |
-| **All 12 tenses** | Present, past, and future grouped by Simple, Continuous, Perfect, and Perfect Continuous, with formulas, usage notes, and examples. |
-| **Conditional sentences** | Zero, First, Second, Third, and Mixed Conditional, with formulas, examples, and lesson links. |
-| **Comparisons** | Comparative and superlative forms, `-er` / `-est`, `more` / `most`, spelling rules, irregular forms, `than`, and `(not) as…as`. |
+| **Все 12 времён** | Настоящее, прошедшее и будущее время с аспектами Simple, Continuous, Perfect и Perfect Continuous: формулы, случаи употребления и примеры. |
+| **Условные предложения** | Zero, First, Second, Third и Mixed Conditional: формулы, примеры и переходы к урокам. |
+| **Степени сравнения** | Сравнительная и превосходная степени, `-er` / `-est`, `more` / `most`, правила написания, неправильные формы, `than` и `(not) as…as`. |
 
-## Architecture
+<a name="architecture"></a>
 
-The project follows **MVVM + Coordinator**, with repository protocols separating content and persistence from the UI:
+## Архитектура
 
-| Component | Responsibility |
+Проект построен на **MVVM + Coordinator**. Протоколы репозиториев отделяют доступ к учебным материалам и сохранение прогресса от интерфейса:
+
+| Компонент | Ответственность |
 | --- | --- |
-| `AppCoordinator` | Composes dependencies, owns the three navigation stacks, checks practice access, and routes lesson, quiz, and return-to-map actions. |
-| UIKit view controllers | Build screens in code, render content, handle lifecycle updates, and forward navigation events through closures. |
-| `QuizViewModel` | Owns one attempt: shuffled question snapshots, answer evaluation, feedback, score, and question advancement. Other screens currently keep presentation logic in their view controllers. |
-| `GrammarContentRepository` | Loads immutable `Codable` / `Sendable` curriculum values from bundled JSON through `async/await`. |
-| `ProgressRepository` | Exposes progress operations; `CoreDataProgressRepository` persists results using a programmatically defined model. |
-| `LessonUnlockRule` | Evaluates sequential unlocking within a section independently of UIKit. |
+| `AppCoordinator` | Собирает зависимости, владеет тремя стеками навигации, проверяет доступ к практике и управляет переходами к уроку, тесту и корневому экрану карты. |
+| Контроллеры UIKit | Создают интерфейс программно, отображают данные, обрабатывают жизненный цикл и передают навигационные события через замыкания. |
+| `QuizViewModel` | Управляет одной попыткой: снимком вопросов с перемешанными ответами, проверкой ответа, обратной связью, счётом и переходом к следующему вопросу. Остальные экраны пока сохраняют логику представления в контроллерах. |
+| `GrammarContentRepository` | Асинхронно загружает неизменяемые учебные данные `Codable` / `Sendable` из JSON, включённого в приложение, с помощью `async/await`. |
+| `ProgressRepository` | Предоставляет операции работы с прогрессом; `CoreDataProgressRepository` сохраняет результаты через программно заданную модель Core Data. |
+| `LessonUnlockRule` | Проверяет последовательное открытие уроков внутри раздела независимо от UIKit. |
 
-UI coordination, quiz state, and progress access are isolated to `@MainActor`. JSON file reading and decoding run in a detached task. Core Data managed objects stay within the main-actor repository; screens receive values rather than managed objects.
+Координация интерфейса, состояние теста и доступ к прогрессу изолированы на `@MainActor`. Чтение JSON и декодирование выполняются в отдельной detached-задаче. Управляемые объекты Core Data остаются внутри репозитория на главном акторе; экраны получают значения, а не управляемые объекты.
 
-The app uses no Storyboards, third-party libraries, backend, or account system. See [Architecture](docs/ARCHITECTURE.md) for navigation, concurrency boundaries, persistence semantics, and current limitations.
+В приложении нет Storyboards, сторонних библиотек, серверной части или системы учётных записей. Навигация, границы конкурентного выполнения, правила сохранения данных и текущие ограничения описаны в документе [«Архитектура»](docs/ARCHITECTURE.md).
 
-## Project structure
+<a name="project-structure"></a>
+
+## Структура проекта
 
 ```text
 EnglishGrammar/
@@ -160,15 +172,17 @@ EnglishGrammar/
 │   ├── grammar_content.json
 │   └── Assets.xcassets/
 └── Info.plist
-EnglishGrammarTests/                 # 10 XCTest classes, 59 tests
-EnglishGrammar.xcodeproj/            # Shared EnglishGrammar scheme
-.github/workflows/ios.yml            # Simulator build and XCTest
-docs/                               # Architecture, roadmap, content notes, concepts
+EnglishGrammarTests/                 # 10 классов XCTest, 59 тестов
+EnglishGrammar.xcodeproj/            # Общая схема EnglishGrammar
+.github/workflows/ios.yml            # Сборка для симулятора и XCTest
+docs/                               # Архитектура, план развития, описание контента и концепты
 ```
 
-## Run locally
+<a name="run-locally"></a>
 
-**Target:** iPhone, portrait orientation, **iOS 16.0 or later**. Use a Mac with Xcode and an installed iPhone simulator runtime. CI is configured for Xcode 16.4; the recorded local validation used Xcode 27.1. No package installation is required.
+## Запуск проекта
+
+**Целевая платформа:** iPhone, портретная ориентация, **iOS 16.0 и новее**. Для запуска нужен Mac с Xcode и установленной средой выполнения симулятора iPhone. В CI используется Xcode 16.4; зафиксированные локальные проверки выполнены в Xcode 27.1. Устанавливать дополнительные пакеты не требуется.
 
 ```sh
 git clone https://github.com/Alexander6Shevtsov/EnglishGrammar.git
@@ -176,14 +190,16 @@ cd EnglishGrammar
 open EnglishGrammar.xcodeproj
 ```
 
-1. Select the shared **EnglishGrammar** scheme.
-2. Choose an available iPhone simulator running iOS 16.0 or later.
-3. Press **⌘R** to build and run, or **⌘U** to run all XCTest.
-4. To run on a physical iPhone, select your signing team in Xcode and choose the device.
+1. Выберите общую схему **EnglishGrammar**.
+2. Укажите доступный симулятор iPhone с iOS 16.0 или новее.
+3. Нажмите **⌘R** для сборки и запуска или **⌘U** для выполнения всех XCTest.
+4. Для запуска на физическом iPhone выберите свою команду подписи в Xcode и нужное устройство.
 
-### Command-line checks
+<a name="command-line-checks"></a>
 
-Run from the repository root:
+### Проверки из командной строки
+
+Выполните из корневого каталога репозитория:
 
 ```sh
 xcodebuild -project EnglishGrammar.xcodeproj -scheme EnglishGrammar \
@@ -195,7 +211,7 @@ xcodebuild -project EnglishGrammar.xcodeproj -scheme EnglishGrammar \
   CODE_SIGNING_ALLOWED=NO build
 ```
 
-List available simulators with `xcrun simctl list devices available`, then replace `<SIMULATOR_UDID>` below with an available iPhone's identifier:
+Получите список доступных симуляторов командой `xcrun simctl list devices available`, затем замените `<SIMULATOR_UDID>` ниже на идентификатор нужного симулятора iPhone:
 
 ```sh
 xcodebuild -project EnglishGrammar.xcodeproj -scheme EnglishGrammar \
@@ -204,41 +220,47 @@ xcodebuild -project EnglishGrammar.xcodeproj -scheme EnglishGrammar \
   CODE_SIGNING_ALLOWED=NO test
 ```
 
-## Validation
+<a name="validation"></a>
 
-Recorded local checks for the implementation merged in [Pull Request #1](https://github.com/Alexander6Shevtsov/EnglishGrammar/pull/1), completed on **October 24, 2026**:
+## Проверка качества
 
-| Check | Result |
+Зафиксированные результаты локальных проверок реализации, объединённой в [Pull Request #1](https://github.com/Alexander6Shevtsov/EnglishGrammar/pull/1). Проверки завершены **24 октября 2026 года**:
+
+| Проверка | Результат |
 | --- | --- |
-| Debug iOS Simulator build | Passed |
-| Release iOS Simulator build | Passed |
-| XCTest on iPhone 16 Pro / iOS 18.6 | **59 passed, 0 failed, 0 skipped** |
-| Manual simulator checks | Navigation, practice access, all three references, reference Dynamic Type layouts, answer shuffling, and progress after relaunch checked across development validation runs. |
+| Сборка Debug для iOS Simulator | Успешно |
+| Сборка Release для iOS Simulator | Успешно |
+| XCTest на iPhone 16 Pro / iOS 18.6 | **59 пройдено, 0 ошибок, 0 пропущено** |
+| Ручные проверки в симуляторе | В ходе разработки проверены навигация, доступ к практике, все три справочника, их вёрстка с Dynamic Type, перемешивание ответов и восстановление прогресса после перезапуска. |
 
-The test suite covers quiz scoring and feedback, deterministic shuffling and retakes, lesson unlocking, section independence, isolated persistence, legacy progress records, JSON totals and answer validity, reference-to-lesson identifiers, and navigation regressions. UIKit presentation tests exercise controls directly; a separate XCUITest target has not been added.
+Тесты проверяют подсчёт баллов и объяснения ответов, детерминированное перемешивание и повторные попытки, открытие уроков, независимость разделов, сохранение в изолированном хранилище, совместимость с существующими записями прогресса, количество и целостность JSON-данных, корректность ответов, соответствие идентификаторов справочников урокам и регрессии навигации. Тесты представления UIKit напрямую взаимодействуют с элементами управления; отдельного тестового таргета XCUITest пока нет.
 
-[GitHub Actions](.github/workflows/ios.yml) runs a **Debug simulator build and XCTest** for pushes and pull requests to `main`. The [PR #1 head validation run](https://github.com/Alexander6Shevtsov/EnglishGrammar/actions/runs/40081657779) succeeded. Release builds were verified locally; the workflow currently has no Release build step.
+[GitHub Actions](.github/workflows/ios.yml) выполняет **сборку Debug для симулятора и XCTest** при отправке изменений и создании pull request в `main`. [Проверка последнего коммита PR #1](https://github.com/Alexander6Shevtsov/EnglishGrammar/actions/runs/40081657779) завершилась успешно. Сборки Release проверены локально; отдельного шага сборки Release в текущем workflow нет.
 
-Remaining validation work includes physical-device QA, a broader accessibility audit, and release preparation. Existing local warnings include AppIntents metadata extraction being skipped, XCTest deployment-version linker warnings, and SQLite diagnostics while two persistence tests clean up temporary stores. See the [roadmap](docs/ROADMAP.md).
+Предстоят проверки на физических устройствах, расширенный аудит доступности и подготовка к выпуску. В локальных проверках остаются предупреждения о пропуске извлечения метаданных AppIntents, целевой версии iOS при линковке XCTest и диагностические сообщения SQLite при очистке временных хранилищ в двух тестах. Подробнее — в [плане развития](docs/ROADMAP.md).
 
-## Design Concepts
+<a name="design-concepts"></a>
 
-The images below are **design concepts, not screenshots of the running app**. They document the visual direction; they do not establish feature availability or an exact match to the current UIKit interface.
+## Концепты дизайна
+
+Изображения ниже — **концепты дизайна, а не скриншоты работающего приложения**. Они показывают визуальное направление, но не подтверждают наличие функций или точное соответствие текущему интерфейсу UIKit.
 
 <details>
-<summary>View concept artwork</summary>
+<summary>Посмотреть концепты</summary>
 
-![EnglishGrammar cover — design concept, not an app screenshot](docs/concepts/cover-concept.png)
+![Обложка EnglishGrammar — концепт дизайна, а не скриншот приложения](docs/concepts/cover-concept.png)
 
-![Proposed screens — design concept, not app screenshots](docs/concepts/screens-concept.png)
+![Предлагаемые экраны — концепт дизайна, а не скриншоты приложения](docs/concepts/screens-concept.png)
 
 </details>
 
-## Development status
+<a name="development-status"></a>
 
-**In Development.** The core learning loop, persistent progression, interactive references, and automated regression coverage are implemented. Upcoming work focuses on content review, accessibility and device testing, and release readiness. Optional future interactions are listed separately in the [roadmap](docs/ROADMAP.md).
+## Статус разработки
 
-[Architecture](docs/ARCHITECTURE.md) · [Roadmap](docs/ROADMAP.md) · [Content provenance and QA](docs/CONTENT.md)
+**In Development.** Реализованы основной учебный цикл, сохранение прогресса, интерактивные справочники и автоматические регрессионные тесты. Дальнейшая работа сосредоточена на редактуре материалов, проверках доступности и поведения на устройствах, а также подготовке к выпуску. Возможные будущие функции перечислены отдельно в [плане развития](docs/ROADMAP.md).
 
-**Author:** [Alexander Shevtsov](https://github.com/Alexander6Shevtsov)
-An iOS development portfolio project focused on native UI, maintainable navigation, local persistence, concurrency, and testable application behavior.
+[Архитектура](docs/ARCHITECTURE.md) · [План развития](docs/ROADMAP.md) · [Происхождение и проверка учебных материалов](docs/CONTENT.md)
+
+**Автор:** [Alexander Shevtsov](https://github.com/Alexander6Shevtsov)
+Проект для портфолио iOS-разработчика с акцентом на нативный интерфейс, поддерживаемую навигацию, локальное хранение данных, конкурентное выполнение и тестируемое поведение приложения.
