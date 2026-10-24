@@ -1,3 +1,11 @@
+//
+//  ProgressRepository.swift
+//  EnglishGrammar
+//
+//  Maintainer: Alexander Shevtsov
+//  Copyright © 2026 Alexander Shevtsov.
+//
+
 import CoreData
 import Foundation
 
@@ -12,7 +20,7 @@ protocol ProgressRepository: AnyObject {
 final class CoreDataProgressRepository: ProgressRepository {
     private let container: NSPersistentContainer
 
-    init(inMemory: Bool = false) {
+    init(inMemory: Bool = false, storeURL: URL? = nil) {
         let schema = NSManagedObjectModel()
         let progressEntity = NSEntityDescription()
         progressEntity.name = "LessonProgress"
@@ -47,6 +55,8 @@ final class CoreDataProgressRepository: ProgressRepository {
         container = NSPersistentContainer(name: "EnglishGrammar", managedObjectModel: schema)
         if inMemory {
             container.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
+        } else if let storeURL {
+            container.persistentStoreDescriptions.first?.url = storeURL
         }
         container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         container.viewContext.automaticallyMergesChangesFromParent = true
@@ -70,13 +80,19 @@ final class CoreDataProgressRepository: ProgressRepository {
     }
 
     func saveResult(lessonID: String, correctAnswers: Int, totalQuestions: Int) throws {
-        guard totalQuestions > 0 else { return }
+        guard totalQuestions > 0,
+              correctAnswers >= 0,
+              correctAnswers <= totalQuestions,
+              correctAnswers <= Int(Int32.max) else { return }
         let context = container.viewContext
         let record = findProgress(for: lessonID) ?? NSEntityDescription.insertNewObject(forEntityName: "LessonProgress", into: context)
         let currentScore = record.value(forKey: "bestScore") as? Int ?? 0
+        let wasCompleted = record.value(forKey: "isCompleted") as? Bool ?? false
+        let requiredCorrectAnswers = (totalQuestions / 10) * 7 + ((totalQuestions % 10) * 7 + 9) / 10
+        let passedAttempt = correctAnswers >= requiredCorrectAnswers
         record.setValue(lessonID, forKey: "lessonID")
         record.setValue(max(currentScore, correctAnswers), forKey: "bestScore")
-        record.setValue(max(currentScore, correctAnswers) * 100 >= totalQuestions * 70, forKey: "isCompleted")
+        record.setValue(wasCompleted || passedAttempt, forKey: "isCompleted")
         record.setValue(Date(), forKey: "updatedAt")
         try context.save()
     }

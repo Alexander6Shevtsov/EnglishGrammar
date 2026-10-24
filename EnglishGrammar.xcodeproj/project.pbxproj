@@ -4,6 +4,146 @@
  classes = {};
  objectVersion = 56;
  objects = {
+	B62949BB157D4C3BB5F65FE7 = {
+		isa = PBXFileReference;
+		path = QuizAnswerShufflingTests.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	EFBB7C48D14344DA96D7F219 = {
+		isa = PBXBuildFile;
+		fileRef = B62949BB157D4C3BB5F65FE7;
+	};
+	21581E0B30DF42F9A181E62A = {
+		isa = PBXFileReference;
+		path = QuizAnswerPresentationTests.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	D4E8C9F0E9BD4F7087AB7713 = {
+		isa = PBXBuildFile;
+		fileRef = 21581E0B30DF42F9A181E62A;
+	};
+	2EB7565DB123459BAE93F34E = {
+		isa = PBXFileReference;
+		path = LessonViewControllerTests.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	310B8FD74BDA4F4190F47695 = {
+		isa = PBXBuildFile;
+		fileRef = 2EB7565DB123459BAE93F34E;
+	};
+	725609A7ED0A48D4AAB79822 = {
+		isa = PBXFileReference;
+		path = AppCoordinatorNavigationTests.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	C060893DE37944E399D261D1 = {
+		isa = PBXBuildFile;
+		fileRef = 725609A7ED0A48D4AAB79822;
+	};
+	B36BC84A82B042FE94EC9152 = {
+		isa = PBXFileReference;
+		path = LessonUnlockRuleTests.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	71CEEC9AE765437B8888F2D7 = {
+		isa = PBXBuildFile;
+		fileRef = B36BC84A82B042FE94EC9152;
+	};
+	A01605DF7BC74F0BB26BFD77 = {
+		isa = PBXFileReference;
+		path = CoreDataProgressRepositoryTests.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	F829F1BFE7384CAAAD15801E = {
+		isa = PBXBuildFile;
+		fileRef = A01605DF7BC74F0BB26BFD77;
+	};
+	BDC9BADDC39541238A97046C = {
+		isa = PBXFileReference;
+		path = CoreDataProgressRepositoryKnownIssueTests.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	5074A40BDAD040D9BA32C5A6 = {
+		isa = PBXBuildFile;
+		fileRef = BDC9BADDC39541238A97046C;
+	};
+	06A5504BBFB8477E8EA49443 = {
+		isa = PBXFileReference;
+		path = GrammarContentTests.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	FF100143968844AFB3ED093A = {
+		isa = PBXBuildFile;
+		fileRef = 06A5504BBFB8477E8EA49443;
+	};
+	0CE546EB4F2A45F393B8D285 = {
+		isa = PBXFileReference;
+		path = GrammarReferenceRoutingTests.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	95F15A772D4044E1B13D35BF = {
+		isa = PBXBuildFile;
+		fileRef = 0CE546EB4F2A45F393B8D285;
+	};
+	5782FE3C1E184F5D9066CE3D = {
+		isa = PBXFileReference;
+		path = GrammarTensesMatrixViewController.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	4F01D49358904F928F44161B = {
+		isa = PBXBuildFile;
+		fileRef = 5782FE3C1E184F5D9066CE3D;
+	};
+	5BA69551EA17412CA931EA16 = {
+		isa = PBXFileReference;
+		path = GrammarConditionalsViewController.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	6DD6275451804D4AAB95104E = {
+		isa = PBXBuildFile;
+		fileRef = 5BA69551EA17412CA931EA16;
+	};
+	B9DAEF57DBD3469E8ED9542C = {
+		isa = PBXFileReference;
+		path = GrammarReferenceOverviewViewController.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	56021B51968441188BCE6996 = {
+		isa = PBXBuildFile;
+		fileRef = B9DAEF57DBD3469E8ED9542C;
+	};
+	B87EB16A53484FC68219D583 = {
+		isa = PBXFileReference;
+		path = GrammarComparisonsViewController.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	8D98FFF2CFC141B495E823E3 = {
+		isa = PBXBuildFile;
+		fileRef = B87EB16A53484FC68219D583;
+	};
+	1B4A1D719E4042AD9A8AD9D8 = {
+		isa = PBXFileReference;
+		path = GrammarReferenceDetailViewController.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	62381FEF69CA4A47AE899215 = {
+		isa = PBXBuildFile;
+		fileRef = 1B4A1D719E4042AD9A8AD9D8;
+	};
 	D5BEDC1F54A9AD9503E043CE = {
 		isa = PBXFileReference;
 		path = AppCoordinator.swift;
@@ -304,6 +444,11 @@
 		isa = PBXGroup;
 		children = (
 	7BC922EE5E5ECEE5A377F24E,
+	5782FE3C1E184F5D9066CE3D,
+	5BA69551EA17412CA931EA16,
+	B9DAEF57DBD3469E8ED9542C,
+	B87EB16A53484FC68219D583,
+	1B4A1D719E4042AD9A8AD9D8,
 );
 		path = Reference;
 		sourceTree = "<group>";
@@ -365,6 +510,15 @@
 		isa = PBXGroup;
 		children = (
 	0C7DC15CB096D228B1460CF9,
+	B62949BB157D4C3BB5F65FE7,
+	21581E0B30DF42F9A181E62A,
+	2EB7565DB123459BAE93F34E,
+	725609A7ED0A48D4AAB79822,
+	B36BC84A82B042FE94EC9152,
+	A01605DF7BC74F0BB26BFD77,
+	BDC9BADDC39541238A97046C,
+	06A5504BBFB8477E8EA49443,
+	0CE546EB4F2A45F393B8D285,
 );
 		path = EnglishGrammarTests;
 		sourceTree = "<group>";
@@ -428,6 +582,11 @@
 	949DD51CA486A36E036E670A,
 	CEB6038FC9F2379F48DE81C9,
 	7DAE6AD785DE32B9D2E20757,
+	4F01D49358904F928F44161B,
+	6DD6275451804D4AAB95104E,
+	56021B51968441188BCE6996,
+	8D98FFF2CFC141B495E823E3,
+	62381FEF69CA4A47AE899215,
 );
 		runOnlyForDeploymentPostprocessing = 0;
 	};
@@ -436,6 +595,15 @@
 		buildActionMask = 2147483647;
 		files = (
 	4157E76CA5F41CC7F4ECBFEC,
+	EFBB7C48D14344DA96D7F219,
+	D4E8C9F0E9BD4F7087AB7713,
+	310B8FD74BDA4F4190F47695,
+	C060893DE37944E399D261D1,
+	71CEEC9AE765437B8888F2D7,
+	F829F1BFE7384CAAAD15801E,
+	5074A40BDAD040D9BA32C5A6,
+	FF100143968844AFB3ED093A,
+	95F15A772D4044E1B13D35BF,
 );
 		runOnlyForDeploymentPostprocessing = 0;
 	};
