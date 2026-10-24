@@ -5,7 +5,7 @@
 ![Status: In Development](https://img.shields.io/badge/status-In%20Development-orange)
 ![iOS 16.0+](https://img.shields.io/badge/iOS-16.0%2B-blue)
 ![UIKit](https://img.shields.io/badge/UI-UIKit-2396F3)
-![XCTest: 59 tests](https://img.shields.io/badge/XCTest-59%20tests-34C759)
+![XCTest: 84 tests](https://img.shields.io/badge/XCTest-84%20tests-34C759)
 
 Офлайн-уроки с объяснениями на русском языке, английскими примерами и сохранением прогресса.
 
@@ -69,7 +69,7 @@
 | --- | --- |
 | Swift | Основной язык приложения. |
 | UIKit | Программная вёрстка, Auto Layout и Dynamic Type, без Storyboard. |
-| MVVM + Coordinator | `QuizViewModel` управляет практикой, `AppCoordinator` — навигацией; данные доступны через протоколы репозиториев. |
+| MVVM + Coordinator | `LearningMapViewModel`, `ProgressViewModel` и `QuizViewModel` готовят состояние карты, прогресса и практики; `AppCoordinator` связывает экраны и зависимости. |
 | Core Data | Хранение завершённых уроков и лучших результатов. |
 | Swift Concurrency | `async/await` для загрузки JSON; интерфейс и доступ к прогрессу изолированы на `@MainActor`. |
 
@@ -121,7 +121,7 @@
 
 ## Тестирование
 
-Подтверждено прохождение **59 XCTest**: логика практики, перемешивание ответов, разблокировка уроков, Core Data, целостность контента и навигация.
+Подтверждено прохождение **84 XCTest** локально и в [CI для PR #2](https://github.com/Alexander6Shevtsov/EnglishGrammar/actions/runs/40114082884): ViewModel, единое правило прохождения 70%, перемешивание ответов, разблокировка, Core Data, контент и навигация.
 
 [GitHub Actions](.github/workflows/ios.yml) выполняет сборку Debug для симулятора и XCTest при push и pull request в `main`. Команды сборки доступны в workflow; история проверок и оставшиеся задачи — в [ROADMAP.md](docs/ROADMAP.md).
 

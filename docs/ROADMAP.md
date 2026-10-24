@@ -2,7 +2,7 @@
 
 **Status: In Development**
 
-The learning flow and reference refactor were merged into `main` in [Pull Request #1](https://github.com/Alexander6Shevtsov/EnglishGrammar/pull/1). The checklist below separates the implemented baseline from remaining validation and possible future features. It is not a delivery schedule.
+The learning flow and reference refactor were merged into `main` in [Pull Request #1](https://github.com/Alexander6Shevtsov/EnglishGrammar/pull/1). The progress-screen MVVM/SOLID refactor followed in [Pull Request #2](https://github.com/Alexander6Shevtsov/EnglishGrammar/pull/2), merged as `50a7198`. The checklist separates implemented work from remaining validation and possible future features; it is not a delivery schedule.
 
 ## Completed baseline
 
@@ -29,14 +29,18 @@ The learning flow and reference refactor were merged into `main` in [Pull Reques
 ### Engineering and validation
 
 - [x] Use MVVM + Coordinator, repository protocols, and initializer dependency injection.
+- [x] Extract `LearningMapViewModel` and `ProgressViewModel` for progress calculations, section statistics, and lesson state; share the pure `CourseProgress` model.
+- [x] Centralize the 70% attempt-passing rule in `QuizPassingRule` for Quiz and Core Data, preserving saved progress and `LessonUnlockRule` behavior.
+- [x] Improve SRP, ISP, and DIP with focused state preparation and separate `LessonCompletionReading` / `QuizResultSaving` interfaces.
 - [x] Decode bundled JSON with Swift Concurrency and keep UIKit and progress access on the main actor.
 - [x] Use scalable system fonts and accessibility labels in the native interface.
 - [x] Confirm local Debug and Release builds for iOS Simulator.
-- [x] Pass all 59 XCTest tests, including deterministic answer shuffling, content integrity, navigation, unlocking, and isolated progress storage.
+- [x] Add 25 regression tests for the refactor and pass all 84 XCTest tests, including ViewModels, passing boundaries, retakes, refresh on return, answer shuffling, content, navigation, and isolated storage.
 - [x] Verify the learning flow, three interactive references, and progress restoration in simulator checks.
 - [x] Configure a shared Xcode scheme and confirm a successful GitHub Actions Debug build/test run for the merged PR head.
+- [x] Add eight real simulator screenshots to the README, including all three interactive references; label design concepts separately.
 
-Local validation confirms Debug and Release simulator builds and all 59 tests. [GitHub Actions run #3](https://github.com/Alexander6Shevtsov/EnglishGrammar/actions/runs/40081657779) also completed successfully for the PR head (`fbef808`); its workflow builds Debug and runs XCTest, without a Release job. The current tests include UIKit controller checks, not a separate end-to-end XCUITest suite.
+Local validation of the PR #2 head (`8a3c00d`) confirms Debug and Release simulator builds and **84/84 XCTest tests**. [GitHub Actions run #9](https://github.com/Alexander6Shevtsov/EnglishGrammar/actions/runs/40114082884) also completed successfully and reports **84 tests, 0 failures**. Its [workflow](../.github/workflows/ios.yml) builds Debug and runs XCTest, without a Release job. The current tests include UIKit controller checks, not a separate end-to-end XCUITest suite.
 
 ## Next: release readiness
 
@@ -45,8 +49,8 @@ Local validation confirms Debug and Release simulator builds and all 59 tests. [
 - [ ] Add end-to-end launch and learning-flow UI automation.
 - [ ] Close temporary Core Data test stores before deleting their fixture directories to eliminate SQLite cleanup diagnostics.
 - [ ] Review remaining toolchain warnings, keep the configured GitHub Actions environment reproducible, and add Release validation in CI.
-- [ ] Capture real screenshots from the running app for the README; retain explicit concept labels on existing design images.
-- [ ] Complete app icon, physical-device QA, privacy review, and App Store preparation.
+- [ ] Validate launch, learning, persistence, and performance on physical iPhones; simulator results do not complete device QA.
+- [ ] Complete the app icon, privacy review and required disclosures, signing, App Store metadata, and store-specific screenshots. Existing README screenshots are portfolio assets.
 
 ## Future candidates
 
