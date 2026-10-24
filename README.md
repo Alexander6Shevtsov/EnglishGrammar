@@ -9,7 +9,42 @@
 
 An offline learning experience built with **Swift, programmatic UIKit, MVVM + Coordinator, Core Data, and Swift Concurrency**. The app combines a guided learning map, focused practice, and interactive grammar references. Lessons and explanations are in Russian, with English examples and translations.
 
-[Features](#features) · [Architecture](#architecture) · [Run locally](#run-locally) · [Validation](#validation) · [Roadmap](docs/ROADMAP.md)
+[Screenshots](#app-screenshots) · [Features](#features) · [Grammar Reference](#interactive-grammar-reference) · [Architecture](#architecture) · [Run locally](#run-locally) · [Validation](#validation) · [Roadmap](docs/ROADMAP.md)
+
+## App Screenshots
+
+Real screenshots captured from the running app in iOS Simulator on iPhone 16 Pro Max (iOS 18.6). Select any image to open the full-resolution PNG. Scrollable pages show the visible portion of the screen.
+
+<table>
+  <tr>
+    <td align="center">
+      <strong>Learning Map</strong><br>
+      <a href="docs/screenshots/learning-map.png">
+        <img src="docs/screenshots/learning-map.png" alt="Learning Map with four grammar sections and saved progress" width="340">
+      </a>
+    </td>
+    <td align="center">
+      <strong>Lesson</strong><br>
+      <a href="docs/screenshots/lesson-theory.png">
+        <img src="docs/screenshots/lesson-theory.png" alt="Present Simple lesson with the Theory tab selected" width="340">
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <strong>Practice</strong><br>
+      <a href="docs/screenshots/quiz-practice.png">
+        <img src="docs/screenshots/quiz-practice.png" alt="Practice question with three shuffled answer options" width="340">
+      </a>
+    </td>
+    <td align="center">
+      <strong>Progress</strong><br>
+      <a href="docs/screenshots/progress.png">
+        <img src="docs/screenshots/progress.png" alt="Progress dashboard with completed and remaining lessons" width="340">
+      </a>
+    </td>
+  </tr>
+</table>
 
 ## Features
 
@@ -34,7 +69,40 @@ An offline learning experience built with **Swift, programmatic UIKit, MVVM + Co
 
 Each lesson contains 10 questions. The curriculum is decoded from [grammar_content.json](EnglishGrammar/Resources/grammar_content.json); question text and explanations stay unchanged when answer options are shuffled.
 
-### Interactive references
+## Interactive Grammar Reference
+
+The Quick Reference screen brings together the three interactive guides. The screenshots below show the real UIKit interface, with tappable cards leading to rules, examples, and lessons.
+
+<table>
+  <tr>
+    <td align="center">
+      <strong>Quick Reference</strong><br>
+      <a href="docs/screenshots/quick-reference.png">
+        <img src="docs/screenshots/quick-reference.png" alt="Quick Reference home with grammar topic categories" width="340">
+      </a>
+    </td>
+    <td align="center">
+      <strong>12 Tenses</strong><br>
+      <a href="docs/screenshots/tenses-reference.png">
+        <img src="docs/screenshots/tenses-reference.png" alt="12-tenses reference with time groups and formula cards" width="340">
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <strong>Conditionals</strong><br>
+      <a href="docs/screenshots/conditionals-reference.png">
+        <img src="docs/screenshots/conditionals-reference.png" alt="Conditional sentence reference with Zero through Mixed Conditional cards" width="340">
+      </a>
+    </td>
+    <td align="center">
+      <strong>Comparisons</strong><br>
+      <a href="docs/screenshots/comparisons-reference.png">
+        <img src="docs/screenshots/comparisons-reference.png" alt="Comparative and superlative reference with formulas and spelling rules" width="340">
+      </a>
+    </td>
+  </tr>
+</table>
 
 | Reference | Content |
 | --- | --- |
@@ -153,7 +221,7 @@ The test suite covers quiz scoring and feedback, deterministic shuffling and ret
 
 Remaining validation work includes physical-device QA, a broader accessibility audit, and release preparation. Existing local warnings include AppIntents metadata extraction being skipped, XCTest deployment-version linker warnings, and SQLite diagnostics while two persistence tests clean up temporary stores. See the [roadmap](docs/ROADMAP.md).
 
-## Design studies
+## Design Concepts
 
 The images below are **design concepts, not screenshots of the running app**. They document the visual direction; they do not establish feature availability or an exact match to the current UIKit interface.
 
@@ -168,7 +236,7 @@ The images below are **design concepts, not screenshots of the running app**. Th
 
 ## Development status
 
-**In Development.** The core learning loop, persistent progression, interactive references, and automated regression coverage are implemented. Upcoming work focuses on content review, accessibility and device testing, real application screenshots, and release readiness. Optional future interactions are listed separately in the [roadmap](docs/ROADMAP.md).
+**In Development.** The core learning loop, persistent progression, interactive references, and automated regression coverage are implemented. Upcoming work focuses on content review, accessibility and device testing, and release readiness. Optional future interactions are listed separately in the [roadmap](docs/ROADMAP.md).
 
 [Architecture](docs/ARCHITECTURE.md) · [Roadmap](docs/ROADMAP.md) · [Content provenance and QA](docs/CONTENT.md)
 
