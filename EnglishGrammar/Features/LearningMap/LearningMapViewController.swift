@@ -12,8 +12,7 @@ import UIKit
 final class LearningMapViewController: UIViewController {
     var onLessonSelected: ((GrammarLesson) -> Void)?
 
-    private var sections: [GrammarSection] = []
-    private var progressRepository: ProgressRepository?
+    private let viewModel: LearningMapViewModel
 
     private let scrollView = CardScrollingScrollView()
     private let contentStack = UIStackView.vertical(spacing: 14)
@@ -24,6 +23,15 @@ final class LearningMapViewController: UIViewController {
         color: GrammarPalette.textPrimary
     )
     private let overallProgress = UIProgressView(progressViewStyle: .default)
+
+    init(viewModel: LearningMapViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        return nil
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,11 +46,10 @@ final class LearningMapViewController: UIViewController {
         refreshContent()
     }
 
-    func configure(sections: [GrammarSection], progressRepository: ProgressRepository) {
-        self.sections = sections
-        self.progressRepository = progressRepository
+    func configure(sections: [GrammarSection]) {
+        viewModel.updateSections(sections)
         loadViewIfNeeded()
-        refreshContent()
+        renderContent()
     }
 
     func showLoadingError(_ error: Error) {
@@ -135,46 +142,35 @@ final class LearningMapViewController: UIViewController {
     }
 
     private func refreshContent() {
+        viewModel.refresh()
+        renderContent()
+    }
+
+    private func renderContent() {
         guard isViewLoaded else { return }
 
-        let completedIDs = progressRepository?.completedLessonIDs() ?? []
-        let totalCount = sections.reduce(0) { total, section in
-            total + section.lessons.count
-        }
-        let completedCount = sections.reduce(0) { total, section in
-            total + section.lessons.filter { completedIDs.contains($0.id) }.count
-        }
-
-        completedLabel.text = "Пройдено \(completedCount) из \(totalCount) станций"
-        overallProgress.setProgress(
-            totalCount == 0 ? 0 : Float(completedCount) / Float(totalCount),
-            animated: true
-        )
+        let state = viewModel.state
+        completedLabel.text = "Пройдено \(state.progress.completedLessonCount) из \(state.progress.totalLessonCount) станций"
+        overallProgress.setProgress(Float(state.progress.fractionCompleted), animated: true)
 
         sectionsStack.arrangedSubviews.forEach { cardView in
             sectionsStack.removeArrangedSubview(cardView)
             cardView.removeFromSuperview()
         }
 
-        for (sectionIndex, section) in sections.enumerated() {
-            let completedLessons = section.lessons.filter {
-                completedIDs.contains($0.id)
-            }.count
+        for (sectionIndex, sectionState) in state.sections.enumerated() {
             sectionsStack.addArrangedSubview(
-                makeSectionCard(
-                    section: section,
-                    position: sectionIndex,
-                    completedCount: completedLessons
-                )
+                makeSectionCard(sectionState: sectionState, position: sectionIndex)
             )
         }
     }
 
     private func makeSectionCard(
-        section: GrammarSection,
-        position: Int,
-        completedCount: Int
+        sectionState: LearningMapViewModel.SectionState,
+        position: Int
     ) -> UIControl {
+        let section = sectionState.section
+        let completedCount = sectionState.progress.completedLessonCount
         let accentColor = GrammarPalette.accent(for: section.accent)
         let cardView = UIControl()
         cardView.tag = position
@@ -240,14 +236,13 @@ final class LearningMapViewController: UIViewController {
             size: 13,
             color: GrammarPalette.textSecondary
         )
-        progressLabel.text = "Пройдено \(completedCount) из \(section.lessons.count) станций"
+        progressLabel.text = "Пройдено \(completedCount) из \(sectionState.progress.totalLessonCount) станций"
         cardStack.addArrangedSubview(progressLabel)
 
         let progressView = UIProgressView(progressViewStyle: .default)
         progressView.progressTintColor = accentColor
         progressView.trackTintColor = GrammarPalette.surfaceRaised
-        progressView.progress = section.lessons.isEmpty
-            ? 0 : Float(completedCount) / Float(section.lessons.count)
+        progressView.progress = Float(sectionState.progress.fractionCompleted)
         progressView.heightAnchor.constraint(equalToConstant: 5).isActive = true
         cardStack.addArrangedSubview(progressView)
 
@@ -269,12 +264,11 @@ final class LearningMapViewController: UIViewController {
     }
 
     @objc private func openSection(_ sender: UIControl) {
-        guard sections.indices.contains(sender.tag),
-              let progressRepository else { return }
+        guard let sectionState = viewModel.section(at: sender.tag) else { return }
 
         let sectionController = GrammarSectionViewController(
-            section: sections[sender.tag],
-            progressRepository: progressRepository
+            section: sectionState.section,
+            viewModel: viewModel
         )
         sectionController.onLessonSelected = { [weak self] lesson in
             self?.onLessonSelected?(lesson)
@@ -288,7 +282,8 @@ private final class GrammarSectionViewController: UIViewController {
     var onLessonSelected: ((GrammarLesson) -> Void)?
 
     private let section: GrammarSection
-    private let progressRepository: ProgressRepository
+    private let viewModel: LearningMapViewModel
+    private var sectionState: LearningMapViewModel.SectionState?
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
     private let headerContainer = UIView()
     private let headerStack = UIStackView.vertical(spacing: 12)
@@ -299,9 +294,9 @@ private final class GrammarSectionViewController: UIViewController {
     )
     private let progressBar = UIProgressView(progressViewStyle: .default)
 
-    init(section: GrammarSection, progressRepository: ProgressRepository) {
+    init(section: GrammarSection, viewModel: LearningMapViewModel) {
         self.section = section
-        self.progressRepository = progressRepository
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -368,32 +363,26 @@ private final class GrammarSectionViewController: UIViewController {
     }
 
     private func refreshProgress() {
-        let completedIDs = progressRepository.completedLessonIDs()
-        let completedCount = section.lessons.filter {
-            completedIDs.contains($0.id)
-        }.count
-        let lessonCount = section.lessons.count
-        progressLabel.text = "Пройдено \(completedCount) из \(lessonCount) станций"
-        let progressValue = lessonCount == 0
-            ? 0 : Float(completedCount) / Float(lessonCount)
-        progressBar.setProgress(progressValue, animated: false)
+        viewModel.refresh()
+        sectionState = viewModel.section(withID: section.id)
+        guard let progress = sectionState?.progress else { return }
+        progressLabel.text = "Пройдено \(progress.completedLessonCount) из \(progress.totalLessonCount) станций"
+        progressBar.setProgress(Float(progress.fractionCompleted), animated: false)
     }
 }
 
 extension GrammarSectionViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection sectionIndex: Int) -> Int {
-        section.lessons.count
+        sectionState?.lessons.count ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "LessonCell", for: indexPath)
-        let lesson = section.lessons[indexPath.row]
-        let completedIDs = progressRepository.completedLessonIDs()
-        let isUnlocked = LessonUnlockRule.isUnlocked(
-            at: indexPath.row,
-            lessons: section.lessons,
-            completedIDs: completedIDs
-        )
+        guard let lessons = sectionState?.lessons,
+              lessons.indices.contains(indexPath.row) else { return cell }
+        let lessonState = lessons[indexPath.row]
+        let lesson = lessonState.lesson
+        let isUnlocked = lessonState.isUnlocked
 
         var content = cell.defaultContentConfiguration()
         content.text = lesson.title
@@ -401,10 +390,10 @@ extension GrammarSectionViewController: UITableViewDataSource, UITableViewDelega
         content.textProperties.color = isUnlocked
             ? GrammarPalette.textPrimary : GrammarPalette.textSecondary
         content.secondaryTextProperties.color = GrammarPalette.textSecondary
-        let symbolName = completedIDs.contains(lesson.id)
+        let symbolName = lessonState.status == .completed
             ? "checkmark.circle.fill" : (isUnlocked ? "book.closed.fill" : "lock.fill")
         content.image = UIImage(systemName: symbolName)
-        content.imageProperties.tintColor = completedIDs.contains(lesson.id)
+        content.imageProperties.tintColor = lessonState.status == .completed
             ? GrammarPalette.mint : (
                 isUnlocked
                     ? GrammarPalette.accent(for: section.accent)
@@ -419,12 +408,11 @@ extension GrammarSectionViewController: UITableViewDataSource, UITableViewDelega
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let completedIDs = progressRepository.completedLessonIDs()
-        guard LessonUnlockRule.isUnlocked(
-            at: indexPath.row,
-            lessons: section.lessons,
-            completedIDs: completedIDs
-        ) else {
+        refreshProgress()
+        guard let lessons = sectionState?.lessons,
+              lessons.indices.contains(indexPath.row) else { return }
+        let lessonState = lessons[indexPath.row]
+        guard lessonState.isUnlocked else {
             let alert = UIAlertController(
                 title: "Урок пока закрыт",
                 message: "Сначала завершите предыдущую станцию раздела.",
@@ -434,7 +422,7 @@ extension GrammarSectionViewController: UITableViewDataSource, UITableViewDelega
             present(alert, animated: true)
             return
         }
-        onLessonSelected?(section.lessons[indexPath.row])
+        onLessonSelected?(lessonState.lesson)
     }
 }
 

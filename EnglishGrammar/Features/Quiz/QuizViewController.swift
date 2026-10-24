@@ -13,7 +13,7 @@ final class QuizViewController: UIViewController {
     var onReturnToMap: (() -> Void)?
 
     private let viewModel: QuizViewModel
-    private let progressRepository: ProgressRepository
+    private let progressRepository: QuizResultSaving
 
     private let scrollView = QuizScrollingScrollView()
     private let contentStack = UIStackView.vertical(spacing: 20)
@@ -38,7 +38,7 @@ final class QuizViewController: UIViewController {
     private let feedbackTitleLabel = UILabel.grammarLabel(size: 18, weight: .bold)
     private let feedbackDetailsLabel = UILabel.grammarLabel(size: 16)
 
-    init(viewModel: QuizViewModel, progressRepository: ProgressRepository) {
+    init(viewModel: QuizViewModel, progressRepository: QuizResultSaving) {
         self.viewModel = viewModel
         self.progressRepository = progressRepository
         super.init(nibName: nil, bundle: nil)
@@ -246,10 +246,9 @@ final class QuizViewController: UIViewController {
                 correctAnswers: viewModel.correctAnswers,
                 totalQuestions: viewModel.questionCount
             )
-            let passed = viewModel.correctAnswers * 100 >= viewModel.questionCount * 70
-            let outcome = passed
+            let outcome = viewModel.hasPassingScore
                 ? "Станция пройдена. Следующий урок открыт."
-                : "Для открытия следующего урока нужно 70% правильных ответов."
+                : "Для открытия следующего урока нужно \(viewModel.passingPercentage)% правильных ответов."
             let message = "Результат: \(viewModel.correctAnswers) из \(viewModel.questionCount).\n\(outcome)\nРезультат сохранён на устройстве."
             let alert = UIAlertController(
                 title: "Урок завершён",
