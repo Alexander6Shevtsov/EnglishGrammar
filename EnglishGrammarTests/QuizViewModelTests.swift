@@ -26,17 +26,19 @@ final class QuizViewModelTests: XCTestCase {
         )
     }
 
-    func testCorrectAnswerIncreasesScoreOnce() {
+    func testCorrectAnswerIncreasesScoreOnce() throws {
         let viewModel = QuizViewModel(lesson: makeLesson())
-        XCTAssertEqual(viewModel.answer(at: 1)?.isCorrect, true)
+        let correctIndex = try XCTUnwrap(viewModel.question.options.firstIndex(where: \.isCorrect))
+        XCTAssertEqual(viewModel.answer(at: correctIndex)?.isCorrect, true)
         XCTAssertEqual(viewModel.correctAnswers, 1)
-        XCTAssertNil(viewModel.answer(at: 1))
+        XCTAssertNil(viewModel.answer(at: correctIndex))
         XCTAssertEqual(viewModel.correctAnswers, 1)
     }
 
-    func testIncorrectAnswerProvidesExplanations() {
+    func testIncorrectAnswerProvidesExplanations() throws {
         let viewModel = QuizViewModel(lesson: makeLesson())
-        let feedback = viewModel.answer(at: 0)
+        let incorrectIndex = try XCTUnwrap(viewModel.question.options.firstIndex { !$0.isCorrect })
+        let feedback = viewModel.answer(at: incorrectIndex)
         XCTAssertEqual(feedback?.isCorrect, false)
         XCTAssertEqual(feedback?.selectedExplanation, "The subject requires -s.")
         XCTAssertFalse(feedback?.correctExplanation.isEmpty ?? true)

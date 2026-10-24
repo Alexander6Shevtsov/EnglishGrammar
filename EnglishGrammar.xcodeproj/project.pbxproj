@@ -4,6 +4,26 @@
  classes = {};
  objectVersion = 56;
  objects = {
+	B62949BB157D4C3BB5F65FE7 = {
+		isa = PBXFileReference;
+		path = QuizAnswerShufflingTests.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	EFBB7C48D14344DA96D7F219 = {
+		isa = PBXBuildFile;
+		fileRef = B62949BB157D4C3BB5F65FE7;
+	};
+	21581E0B30DF42F9A181E62A = {
+		isa = PBXFileReference;
+		path = QuizAnswerPresentationTests.swift;
+		sourceTree = "<group>";
+		lastKnownFileType = sourcecode.swift;
+	};
+	D4E8C9F0E9BD4F7087AB7713 = {
+		isa = PBXBuildFile;
+		fileRef = 21581E0B30DF42F9A181E62A;
+	};
 	2EB7565DB123459BAE93F34E = {
 		isa = PBXFileReference;
 		path = LessonViewControllerTests.swift;
@@ -490,6 +510,8 @@
 		isa = PBXGroup;
 		children = (
 	0C7DC15CB096D228B1460CF9,
+	B62949BB157D4C3BB5F65FE7,
+	21581E0B30DF42F9A181E62A,
 	2EB7565DB123459BAE93F34E,
 	725609A7ED0A48D4AAB79822,
 	B36BC84A82B042FE94EC9152,
@@ -573,6 +595,8 @@
 		buildActionMask = 2147483647;
 		files = (
 	4157E76CA5F41CC7F4ECBFEC,
+	EFBB7C48D14344DA96D7F219,
+	D4E8C9F0E9BD4F7087AB7713,
 	310B8FD74BDA4F4190F47695,
 	C060893DE37944E399D261D1,
 	71CEEC9AE765437B8888F2D7,
