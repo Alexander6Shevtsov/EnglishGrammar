@@ -140,10 +140,10 @@
 
 ## Статус разработки
 
-**In Development.** Основной учебный сценарий реализован. Предстоят редактура материалов, расширенная проверка доступности и тестирование на физических устройствах перед выпуском.
+**In Development.** Основной учебный сценарий реализован. Предстоят редактура материалов, расширенная проверка доступности и тестирование на физических устройствах перед выпуском в App Store.
 
 Документация: [архитектура](docs/ARCHITECTURE.md) · [план развития](docs/ROADMAP.md) · [учебные материалы и их проверка](docs/CONTENT.md).
 
-Концепты дизайна, а не скриншоты приложения: [обложка](docs/concepts/cover-concept.png) и [экраны](docs/concepts/screens-concept.png).
+Концепты дизайна: [обложка](docs/concepts/cover-concept.png) и [экраны](docs/concepts/screens-concept.png).
 
-**Автор:** [Alexander Shevtsov](https://github.com/Alexander6Shevtsov) — проект для портфолио iOS-разработчика.
+**Авторы:** [Alexander Shevtsov](https://github.com/Alexander6Shevtsov) (разработка), Alexander Denisov (наполнение)
