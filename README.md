@@ -146,4 +146,4 @@
 
 Концепты дизайна: [обложка](docs/concepts/cover-concept.png) и [экраны](docs/concepts/screens-concept.png).
 
-**Авторы:** [Alexander Shevtsov](https://github.com/Alexander6Shevtsov) (разработка), Alexander Denisov (наполнение)
+**Авторы:** [Alexander Shevtsov](https://github.com/Alexander6Shevtsov) - Разработка, UX, Alexander Denisov - Наполнение, UI
